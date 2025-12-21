@@ -341,3 +341,18 @@ body {
         flex-direction: column;
     }
 }
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --card-background: rgba(44, 44, 46, 0.95);
+        --text-color: #f2f2f7;
+        --text-light: #aeaeb2;
+    }
+}
+
+/* PWA Styles */
+@media (display-mode: standalone) {
+    .app-container {
+        padding-top: 40px;
+    }
+}
