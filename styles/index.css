@@ -305,3 +305,39 @@ body {
     font-weight: 600;
     color: var(--primary-color);
 }
+/* Footer */
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+    .app-container {
+        padding: 15px;
+    }
+    
+    .weather-main {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .weather-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+}
