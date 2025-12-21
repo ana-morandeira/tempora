@@ -25,3 +25,40 @@ body {
     color: var(--text-color);
     line-height: 1.6;
 }
+
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.app-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    background: var(--card-background);
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
