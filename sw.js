@@ -3,10 +3,10 @@ const API_CACHE = 'tempora-api-v1';
 
 const STATIC_FILES = [
     '/',
-    '/index.html',
+    '/static/index.html',
     '/styles/index.css',
-    '/script.js',
-    '/manifest.json'
+    '/services/script.js',
+    '/services/manifest.json'
 ];
 
 self.addEventListener('install', event => {
