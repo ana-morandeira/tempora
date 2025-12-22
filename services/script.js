@@ -72,7 +72,7 @@ class WeatherApp {
             const { latitude, longitude } = position.coords;
             await this.fetchWeatherData(latitude, longitude);
             const name = await this.getLocationName(latitude, longitude);
-            document.getElementById('locationName').textContent = `📍 ${name}`;
+            document.getElementById('locationName').textContent = `📍 Ubicación actual`;
         } catch {
             this.showError('No se pudo obtener la ubicación');
         }
