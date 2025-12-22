@@ -1,22 +1,23 @@
 {
-    "name": "WeatherApp - Pronóstico del Tiempo",
-    "short_name": "WeatherApp",
-    "description": "Aplicación del clima con pronóstico de 15 días",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "background_color": "#667eea",
-    "theme_color": "#4A90E2",
-    "orientation": "portrait",
-    "icons": [
-        {
-            "src": "icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "Tempora",
+  "short_name": "Tempora",
+  "description": "Aplicación meteorológica con pronóstico de 15 días",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#4A90E2",
+  "theme_color": "#4A90E2",
+  "lang": "es-ES",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
