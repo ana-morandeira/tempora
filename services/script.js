@@ -148,8 +148,12 @@ https://api.open-meteo.com/v1/forecast
         // 1️⃣ Tiempo actual
         this.displayCurrentWeather(data.current);
 
-        // 2️⃣ Gráfica próximas 24 horas
-        this.renderHourlyChart(data.hourly);
+       if (typeof Chart === 'function') {
+    this.renderHourlyChart(data.hourly);
+} else {
+    console.warn('Chart.js no disponible, se omite la gráfica');
+}
+
 
         // 3️⃣ Pronóstico (cards, por ahora)
         this.displayForecast(data.daily);
@@ -274,12 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* REGISTRO DEL SERVICE WORKER */
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker
-            .register('/sw.js')
-            .then(reg => console.log('Service Worker activo:', reg.scope))
-            .catch(err => console.error('SW error:', err));
-    });
-}
+//if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//        navigator.serviceWorker
+//            .register('/sw.js')
+//            .then(reg => console.log('Service Worker activo:', reg.scope))
+//            .catch(err => console.error('SW error:', err));
+//    });
+//}
 
