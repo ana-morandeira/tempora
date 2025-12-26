@@ -125,8 +125,24 @@ class WeatherApp {
         }
     }
 
-    async fetchWeatherData(lat, lon) {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max,relative_humidity_2m_max&forecast_days=15&timezone=auto`;
+   async fetchWeatherData(lat, lon) {
+    const url = `
+https://api.open-meteo.com/v1/forecast
+?latitude=${lat}
+&longitude=${lon}
+&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility
+&hourly=temperature_2m,precipitation
+&daily=temperature_2m_max,temperature_2m_min
+&forecast_days=15
+&timezone=auto
+`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+    if (!data.current || !data.daily || !data.hourly) throw new Error();
+
 
         const res = await fetch(url);
         if (!res.ok) throw new Error();

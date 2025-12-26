@@ -10,7 +10,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/images/temporaLogo192.png",
+      "src": "/images/logos/temporaLogo512.png",
       "sizes": "192x192",
       "type": "image/png"
     },
