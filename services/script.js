@@ -142,6 +142,8 @@ https://api.open-meteo.com/v1/forecast
 
     const data = await res.json();
     if (!data.current || !data.daily || !data.hourly) throw new Error();
+    this.renderHourlyChart(data.hourly);
+
 
 
         const res = await fetch(url);
@@ -200,6 +202,46 @@ https://api.open-meteo.com/v1/forecast
             container.appendChild(item);
         });
     }
+
+    renderHourlyChart(hourly) {
+    const labels = hourly.time.slice(0, 24).map(t => {
+        const date = new Date(t);
+        return date.getHours() + 'h';
+    });
+
+    const temperatures = hourly.temperature_2m.slice(0, 24);
+
+    // Si ya existe una gráfica previa, la destruimos
+    if (this.hourlyChart) {
+        this.hourlyChart.destroy();
+    }
+
+    this.hourlyChart = new Chart(
+        document.getElementById('hourlyChart'),
+        {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Temperatura (°C)',
+                        data: temperatures,
+                        tension: 0.4,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true }
+                }
+            }
+        }
+    );
+}
+
 
     getWeatherInfo(code) {
         const map = {
