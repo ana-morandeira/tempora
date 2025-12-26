@@ -124,9 +124,9 @@ class WeatherApp {
             return 'Ubicación actual';
         }
     }
-
-   async fetchWeatherData(lat, lon) {
-    const url = `
+async fetchWeatherData(lat, lon) {
+    try {
+        const url = `
 https://api.open-meteo.com/v1/forecast
 ?latitude=${lat}
 &longitude=${lon}
@@ -137,31 +137,41 @@ https://api.open-meteo.com/v1/forecast
 &timezone=auto
 `;
 
-    const res = await fetch(url);
-    if (!res.ok) throw new Error();
-
-    const data = await res.json();
-    if (!data.current || !data.daily || !data.hourly) throw new Error();
-    this.renderHourlyChart(data.hourly);
-
-
-
         const res = await fetch(url);
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error('Error en la respuesta de la API');
 
         const data = await res.json();
-        if (!data.current || !data.daily) throw new Error();
+        if (!data.current || !data.daily || !data.hourly) {
+            throw new Error('Datos incompletos de Open-Meteo');
+        }
 
+        // 1️⃣ Tiempo actual
         this.displayCurrentWeather(data.current);
+
+        // 2️⃣ Gráfica próximas 24 horas
+        this.renderHourlyChart(data.hourly);
+
+        // 3️⃣ Pronóstico (cards, por ahora)
         this.displayForecast(data.daily);
 
+        // 4️⃣ Mostrar secciones
+        document.getElementById('currentWeather').classList.remove('hidden');
+        document.getElementById('forecast').classList.remove('hidden');
+        document.getElementById('charts').classList.remove('hidden');
+
+        // 5️⃣ Última actualización
         document.getElementById('lastUpdate').textContent =
             new Date().toLocaleTimeString('es-ES');
 
+    } catch (error) {
+        console.error(error);
+        this.showError('No se pudieron cargar los datos meteorológicos');
+    } finally {
         this.hideLoading();
-        document.getElementById('currentWeather').classList.remove('hidden');
-        document.getElementById('forecast').classList.remove('hidden');
     }
+}
+
+  
 
     displayCurrentWeather(c) {
         document.getElementById('currentTemp').textContent = `${Math.round(c.temperature_2m)}°C`;
