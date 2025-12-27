@@ -3,7 +3,7 @@ const API_CACHE = 'tempora-api-v1';
 
 const STATIC_FILES = [
     '/',
-    '/static/index.html',
+    'index.html',
     'styles/index.css',
     'services/script.js',
     'services/manifest.json'

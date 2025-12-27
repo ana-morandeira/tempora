@@ -118,7 +118,7 @@ class WeatherApp {
   `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=es`
 );
 
-            );
+            ;
             const data = await res.json();
             const r = data.results?.[0];
             return r ? `${r.name}, ${r.country}` : 'Ubicación actual';
@@ -272,12 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* REGISTRO DEL SERVICE WORKER */
-//if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//        navigator.serviceWorker
-//            .register('/sw.js')
-//            .then(reg => console.log('Service Worker activo:', reg.scope))
-//            .catch(err => console.error('SW error:', err));
-//    });
-//}
+if ('serviceWorker' in navigator) {
+   window.addEventListener('load', () => {
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then(reg => console.log('Service Worker activo:', reg.scope))
+            .catch(err => console.error('SW error:', err));
+    });
+}
 

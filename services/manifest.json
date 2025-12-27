@@ -2,7 +2,7 @@
   "name": "Tempora",
   "short_name": "Tempora",
   "description": "Aplicación meteorológica con pronóstico de 15 días",
-  "start_url": "/static/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#4A90E2",
   "theme_color": "#4A90E2",
