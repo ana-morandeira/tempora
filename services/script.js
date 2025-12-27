@@ -299,89 +299,94 @@ class WeatherApp {
         );
     }
 
-    // ✅ GRÁFICA DIARIA (15 días) - NUEVA ✨
-    renderDailyChart(daily) {
-        const labels = daily.time.map(dateStr => {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('es-ES', { 
-                weekday: 'short', 
-                day: 'numeric' 
-            });
+renderDailyChart(daily) {
+    const labels = daily.time.map(dateStr => {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('es-ES', { 
+            weekday: 'short', 
+            day: 'numeric' 
         });
+    });
 
-        if (this.dailyChart) {
-            this.dailyChart.destroy();
-        }
+    // Mapea códigos de clima a iconos emoji
+    const weatherIcons = daily.weather_code.map(code => this.getWeatherIcon(code));
 
-        this.dailyChart = new Chart(
-            document.getElementById('dailyChart'),
-            {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [
-                        {
-                            label: 'Tª Máxima (°C)',
-                            data: daily.temperature_2m_max,
-                            backgroundColor: 'rgba(74, 144, 226, 0.8)',
-                            borderColor: '#4A90E2',
-                            borderRadius: 8,
-                            borderWidth: 1,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Tª Mínima (°C)',
-                            data: daily.temperature_2m_min,
-                            backgroundColor: 'rgba(123, 104, 238, 0.6)',
-                            borderColor: '#7B68EE',
-                            borderRadius: 8,
-                            borderWidth: 1,
-                            yAxisID: 'y'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(context) {
-                                    return `Pronóstico: ${context[0].label}`;
-                                },
-                                afterLabel: function(context) {
-                                    const max = context.datasetIndex === 0 ? context.parsed.y : null;
-                                    const min = context.datasetIndex === 1 ? context.parsed.y : null;
-                                    return max && min ? 
-                                        `Rango: ${min.toFixed(1)}° → ${max.toFixed(1)}°` : '';
-                                }
+    if (this.dailyChart) {
+        this.dailyChart.destroy();
+    }
+
+    this.dailyChart = new Chart(
+        document.getElementById('dailyChart'),
+        {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Tª Máxima (°C)',
+                        data: daily.temperature_2m_max,
+                        backgroundColor: 'rgba(74, 144, 226, 0.8)',
+                        borderColor: '#4A90E2',
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Tª Mínima (°C)',
+                        data: daily.temperature_2m_min,
+                        backgroundColor: 'rgba(123, 104, 238, 0.6)',
+                        borderColor: '#7B68EE',
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { padding: 20 } },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return `${context[0].label} ${weatherIcons[context[0].dataIndex]}`;
+                            },
+                            afterLabel: function(context) {
+                                const max = context.datasetIndex === 0 ? context.parsed.y : null;
+                                const min = context.datasetIndex === 1 ? context.parsed.y : null;
+                                return max && min ? 
+                                    `Rango: ${min.toFixed(1)}° → ${max.toFixed(1)}°` : '';
                             }
                         }
                     },
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: 'Temperatura (°C)' },
-                            grid: { color: 'rgba(0,0,0,0.05)' },
-                            ticks: { stepSize: 2 }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { maxRotation: 45 }
+                    // ✅ ICONOS EN TOOLTIPS
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        color: 'white',
+                        font: { weight: 'bold', size: 12 },
+                        formatter: (value, context) => {
+                            return weatherIcons[context.dataIndex];
                         }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Temperatura (°C)' }
                     },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
+                    x: { grid: { display: false }, ticks: { maxRotation: 45 } }
                 }
-            }
-        );
-    }
+            },
+            plugins: [ChartDataLabels]  // ← Plugin para iconos encima barras
+        }
+    );
+}
+
 
     getWeatherInfo(code) {
         const map = {
@@ -397,6 +402,19 @@ class WeatherApp {
         const r = map[code] || ['🌤️', 'Clima desconocido'];
         return { icon: r[0], description: r[1] };
     }
+    Chart.register(ChartDataLabels);
+    getWeatherIcon(code) {
+    const map = {
+        0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+        45: '🌫️', 48: '🌫️',
+        61: '🌧️', 63: '🌧️', 65: '🌧️',
+        71: '🌨️', 73: '🌨️', 75: '🌨️',
+        80: '🌦️', 81: '🌦️', 82: '🌦️',
+        95: '⛈️', 96: '⛈️', 99: '⛈️'
+    };
+    return map[code] || '🌤️';
+}
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
