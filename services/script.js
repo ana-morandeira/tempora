@@ -128,7 +128,8 @@ class WeatherApp {
     }
 async fetchWeatherData(lat, lon) {
     try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,precipitation&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
+
 
 
         const res = await fetch(url);
@@ -211,15 +212,17 @@ async fetchWeatherData(lat, lon) {
         });
     }
 
-    renderHourlyChart(hourly) {
-    const labels = hourly.time.slice(0, 24).map(t => {
+  renderHourlyChart(hourly) {
+    const labels = hourly.time.slice(0, 48).map(t => {  // ← 48h en vez de 24h
         const date = new Date(t);
-        return date.getHours() + 'h';
+        return `${date.getHours()}h`;
     });
 
-    const temperatures = hourly.temperature_2m.slice(0, 24);
+    const temperatures = hourly.temperature_2m.slice(0, 48);
+    const feelsLike = hourly.apparent_temperature?.slice(0, 48) || temperatures;  // Si no hay, usa temp
+    const precipitation = hourly.precipitation.slice(0, 48);
 
-    // Si ya existe una gráfica previa, la destruimos
+    // Destruye gráfica anterior si existe
     if (this.hourlyChart) {
         this.hourlyChart.destroy();
     }
@@ -234,21 +237,87 @@ async fetchWeatherData(lat, lon) {
                     {
                         label: 'Temperatura (°C)',
                         data: temperatures,
+                        borderColor: '#4A90E2',
+                        backgroundColor: 'rgba(74, 144, 226, 0.1)',
                         tension: 0.4,
-                        borderWidth: 2
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Sensación (°C)',
+                        data: feelsLike,
+                        borderColor: '#7B68EE',
+                        backgroundColor: 'rgba(123, 104, 238, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Precipitación (mm)',
+                        data: precipitation,
+                        borderColor: '#FF6B6B',
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        tension: 0.3,
+                        yAxisID: 'y1',  // Eje secundario para mm
+                        borderDash: [5, 5]  // Línea punteada
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
                 plugins: {
-                    legend: { display: true }
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function(context) {
+                                if (context.datasetIndex === 2) {
+                                    return `Probabilidad baja si < 0.5mm`;
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Temperatura (°C)'
+                        },
+                        grid: { drawOnChartArea: false }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Precipitación (mm)'
+                        },
+                        grid: { drawOnChartArea: false }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
                 }
             }
         }
     );
 }
+
 
 
     getWeatherInfo(code) {
