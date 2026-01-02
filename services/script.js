@@ -1,8 +1,8 @@
 class WeatherApp {
     constructor() {
         this.currentLocation = null;
-        this.hourlyChart = null;  // ← AÑADIDO
-        this.dailyChart = null;   // ← AÑADIDO
+        this.hourlyChart = null;
+        this.dailyChart = null;
         this.initializeApp();
         this.bindEvents();
     }
@@ -45,7 +45,9 @@ class WeatherApp {
         document.getElementById('loading').classList.remove('hidden');
         document.getElementById('error').classList.add('hidden');
         document.getElementById('currentWeather').classList.add('hidden');
-        document.getElementById('forecast').classList.add('hidden');
+        // El ID 'charts' debe englobar tus dos canvas en el HTML
+        const charts = document.getElementById('charts');
+        if (charts) charts.classList.add('hidden');
     }
 
     hideLoading() {
@@ -53,8 +55,9 @@ class WeatherApp {
     }
 
     showError(message) {
-        document.getElementById('error').querySelector('p').textContent = `❌ ${message}`;
-        document.getElementById('error').classList.remove('hidden');
+        const errorDiv = document.getElementById('error');
+        errorDiv.querySelector('p').textContent = `❌ ${message}`;
+        errorDiv.classList.remove('hidden');
         this.hideLoading();
     }
 
@@ -63,17 +66,13 @@ class WeatherApp {
             this.showError('Geolocalización no soportada');
             return;
         }
-
         this.showLoading();
-
         try {
             const position = await new Promise((resolve, reject) =>
                 navigator.geolocation.getCurrentPosition(resolve, reject)
             );
-
             const { latitude, longitude } = position.coords;
             await this.fetchWeatherData(latitude, longitude);
-            const name = await this.getLocationName(latitude, longitude);
             document.getElementById('locationName').textContent = `📍 Ubicación actual`;
         } catch {
             this.showError('No se pudo obtener la ubicación');
@@ -82,14 +81,12 @@ class WeatherApp {
 
     async searchByCity(city) {
         this.showLoading();
-
         try {
             const coords = await this.geocodeCity(city);
             if (!coords) {
                 this.showError('Ciudad no encontrada');
                 return;
             }
-
             await this.fetchWeatherData(coords.lat, coords.lon);
             document.getElementById('locationName').textContent = `📍 ${coords.name}`;
             document.getElementById('cityInput').value = '';
@@ -103,9 +100,7 @@ class WeatherApp {
             `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es`
         );
         const data = await res.json();
-
         if (!data.results?.length) return null;
-
         const r = data.results[0];
         return {
             lat: r.latitude,
@@ -114,55 +109,34 @@ class WeatherApp {
         };
     }
 
-    async getLocationName(lat, lon) {
-        try {
-            const res = await fetch(
-                `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=es`
-            );
-            const data = await res.json();
-            const r = data.results?.[0];
-            return r ? `${r.name}, ${r.country}` : 'Ubicación actual';
-        } catch {
-            return 'Ubicación actual';
-        }
-    }
-
     async fetchWeatherData(lat, lon) {
         try {
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
 
             const res = await fetch(url);
-            if (!res.ok) throw new Error('Error en la respuesta de la API');
+            if (!res.ok) throw new Error('Error en la API');
 
             const data = await res.json();
-            if (!data.current || !data.daily || !data.hourly) {
-                throw new Error('Datos incompletos de Open-Meteo');
-            }
 
-            // 1️⃣ Tiempo actual
+            // 1. Tiempo actual
             this.displayCurrentWeather(data.current);
 
-            // 2️⃣ GRÁFICAS (AMBAS)
+            // 2. Renderizar Gráficas
             if (typeof Chart === 'function') {
                 this.renderHourlyChart(data.hourly);
-                this.renderDailyChart(data.daily);  // ← AÑADIDO
-            } else {
-                console.warn('Chart.js no disponible, se omite la gráfica');
+                this.renderDailyChart(data.daily);
             }
 
-          
-
-            // 4️⃣ Mostrar secciones
+            // 3. Mostrar UI
             document.getElementById('currentWeather').classList.remove('hidden');
-            document.getElementById('charts').classList.remove('hidden');
+            const chartsContainer = document.getElementById('charts');
+            if (chartsContainer) chartsContainer.classList.remove('hidden');
 
-            // 5️⃣ Última actualización
-            document.getElementById('lastUpdate').textContent =
-                new Date().toLocaleTimeString('es-ES');
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('es-ES');
 
         } catch (error) {
             console.error(error);
-            this.showError('No se pudieron cargar los datos meteorológicos');
+            this.showError('Error al cargar datos');
         } finally {
             this.hideLoading();
         }
@@ -181,214 +155,96 @@ class WeatherApp {
         document.getElementById('precipitation').textContent = `${c.precipitation} mm`;
     }
 
-    displayForecast(daily) {
-        const container = document.getElementById('forecastContainer');
-        container.innerHTML = '';
+    renderHourlyChart(hourly) {
+        const labels = hourly.time.slice(0, 48).map(t => `${new Date(t).getHours()}h`);
+        const temps = hourly.temperature_2m.slice(0, 48);
 
-        daily.time.forEach((dateStr, i) => {
-            const date = new Date(dateStr);
-            const info = this.getWeatherInfo(daily.weather_code[i]);
+        if (this.hourlyChart) this.hourlyChart.destroy();
 
-            const item = document.createElement('div');
-            item.className = 'forecast-item';
-            item.innerHTML = `
-                <div class="forecast-header">
-                    <div>
-                        <div class="forecast-date">${i === 0 ? 'Hoy' : date.toLocaleDateString('es-ES', { weekday: 'long' })}</div>
-                        <div style="font-size:.9rem">${date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })}</div>
-                    </div>
-                    <div class="forecast-icon">${info.icon}</div>
-                </div>
-                <div class="forecast-temps">
-                    <span class="forecast-high">${Math.round(daily.temperature_2m_max[i])}°</span>
-                    <span class="forecast-low">${Math.round(daily.temperature_2m_min[i])}°</span>
-                </div>
-            `;
-            container.appendChild(item);
+        this.hourlyChart = new Chart(document.getElementById('hourlyChart'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Temperatura (°C)',
+                    data: temps,
+                    borderColor: '#4A90E2',
+                    backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: false } }
+            }
         });
     }
 
-    // ✅ GRÁFICA HORARIA (48h) - ya la tienes perfecta
-    renderHourlyChart(hourly) {
-        const labels = hourly.time.slice(0, 48).map(t => {
-            const date = new Date(t);
-            return `${date.getHours()}h`;
-        });
+    renderDailyChart(daily) {
+        const labels = daily.time.map(d => new Date(d).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }));
+        const icons = daily.weather_code.map(code => this.getWeatherIcon(code));
 
-        const temperatures = hourly.temperature_2m.slice(0, 48);
-        const feelsLike = hourly.apparent_temperature?.slice(0, 48) || temperatures;
-        const precipitation = hourly.precipitation.slice(0, 48);
+        if (this.dailyChart) this.dailyChart.destroy();
 
-        if (this.hourlyChart) {
-            this.hourlyChart.destroy();
-        }
+        const canvas = document.getElementById('dailyChart');
+        if (!canvas) return;
 
-        this.hourlyChart = new Chart(
-            document.getElementById('hourlyChart'),
-            {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [
-                        {
-                            label: 'Temperatura (°C)',
-                            data: temperatures,
-                            borderColor: '#4A90E2',
-                            backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Sensación (°C)',
-                            data: feelsLike,
-                            borderColor: '#7B68EE',
-                            backgroundColor: 'rgba(123, 104, 238, 0.1)',
-                            tension: 0.4,
-                            fill: false,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Precipitación (mm)',
-                            data: precipitation,
-                            borderColor: '#FF6B6B',
-                            backgroundColor: 'rgba(255, 107, 107, 0.2)',
-                            tension: 0.3,
-                            yAxisID: 'y1',
-                            borderDash: [5, 5]
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: {
-                        legend: { position: 'top', labels: { padding: 20, usePointStyle: true } },
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(context) {
-                                    if (context.datasetIndex === 2) {
-                                        return `Probabilidad baja si < 0.5mm`;
-                                    }
-                                }
-                            }
-                        }
+        this.dailyChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Máx',
+                        data: daily.temperature_2m_max,
+                        backgroundColor: '#4A90E2',
+                        borderRadius: 5
                     },
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: 'Temperatura (°C)' },
-                            grid: { drawOnChartArea: false }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: { display: true, text: 'Precipitación (mm)' },
-                            grid: { drawOnChartArea: false }
-                        },
-                        x: { grid: { display: false } }
+                    {
+                        label: 'Mín',
+                        data: daily.temperature_2m_min,
+                        backgroundColor: '#7B68EE',
+                        borderRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        display: !!window.ChartDataLabels,
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (val, ctx) => ctx.datasetIndex === 0 ? icons[ctx.dataIndex] : ''
                     }
                 }
-            }
-        );
+            },
+            plugins: window.ChartDataLabels ? [window.ChartDataLabels] : []
+        });
     }
-
-renderDailyChart(daily) {
-    const labels = daily.time.map(dateStr => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' });
-    });
-
-    const weatherIcons = daily.weather_code.map(code => this.getWeatherIcon(code));
-
-    if (this.dailyChart) {
-        this.dailyChart.destroy();
-    }
-
-    const ctx = document.getElementById('dailyChart');
-    if (!ctx) return;
-
-    this.dailyChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Tª Máxima (°C)',
-                    data: daily.temperature_2m_max,
-                    backgroundColor: 'rgba(74, 144, 226, 0.8)',
-                    borderRadius: 8,
-                },
-                {
-                    label: 'Tª Mínima (°C)',
-                    data: daily.temperature_2m_min,
-                    backgroundColor: 'rgba(123, 104, 238, 0.6)',
-                    borderRadius: 8,
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                // Desactivamos temporalmente datalabels si no carga la librería
-                datalabels: {
-                    display: typeof ChartDataLabels !== 'undefined',
-                    anchor: 'end',
-                    align: 'top',
-                    formatter: (value, context) => weatherIcons[context.dataIndex]
-                }
-            }
-        },
-        // Solo añade el plugin si existe
-        plugins: typeof ChartDataLabels !== 'undefined' ? [ChartDataLabels] : []
-    });
-}
 
     getWeatherInfo(code) {
-        const map = {
-            0: ['☀️', 'Despejado'],
-            1: ['🌤️', 'Mayormente despejado'],
-            2: ['⛅', 'Parcialmente nublado'],
-            3: ['☁️', 'Nublado'],
-            45: ['🌫️', 'Niebla'],
-            61: ['🌧️', 'Lluvia'],
-            71: ['🌨️', 'Nieve'],
-            95: ['⛈️', 'Tormenta']
-        };
-        const r = map[code] || ['🌤️', 'Clima desconocido'];
+        const map = { 0: ['☀️', 'Despejado'], 1: ['🌤️', 'M. Despejado'], 2: ['⛅', 'P. Nublado'], 3: ['☁️', 'Nublado'], 45: ['🌫️', 'Niebla'], 61: ['🌧️', 'Lluvia'], 71: ['🌨️', 'Nieve'], 95: ['⛈️', 'Tormenta'] };
+        const r = map[code] || ['🌤️', 'N/A'];
         return { icon: r[0], description: r[1] };
     }
-   
-    
+
     getWeatherIcon(code) {
-    const map = {
-        0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
-        45: '🌫️', 48: '🌫️',
-        61: '🌧️', 63: '🌧️', 65: '🌧️',
-        71: '🌨️', 73: '🌨️', 75: '🌨️',
-        80: '🌦️', 81: '🌦️', 82: '🌦️',
-        95: '⛈️', 96: '⛈️', 99: '⛈️'
-    };
-    return map[code] || '🌤️';
+        const map = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 61: '🌧️', 71: '🌨️', 95: '⛈️' };
+        return map[code] || '🌤️';
+    }
 }
 
-}
+document.addEventListener('DOMContentLoaded', () => { new WeatherApp(); });
 
-document.addEventListener('DOMContentLoaded', () => {
-    new WeatherApp();
-});
-
-/* REGISTRO DEL SERVICE WORKER */
+/* REGISTRO DEL SERVICE WORKER (DESACTIVADO PARA DESARROLLO)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker
-            .register('/sw.js')
-            .then(reg => console.log('Service Worker activo:', reg.scope))
-            .catch(err => console.error('SW error:', err));
+        navigator.serviceWorker.register('/sw.js');
     });
 }
+*/
