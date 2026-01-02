@@ -150,12 +150,10 @@ class WeatherApp {
                 console.warn('Chart.js no disponible, se omite la gráfica');
             }
 
-            // 3️⃣ Pronóstico (cards)
-            this.displayForecast(data.daily);
+          
 
             // 4️⃣ Mostrar secciones
             document.getElementById('currentWeather').classList.remove('hidden');
-            document.getElementById('forecast').classList.remove('hidden');
             document.getElementById('charts').classList.remove('hidden');
 
             // 5️⃣ Última actualización
