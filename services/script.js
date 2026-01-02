@@ -403,6 +403,7 @@ renderDailyChart(daily) {
         return { icon: r[0], description: r[1] };
     }
     Chart.register(ChartDataLabels);
+    
     getWeatherIcon(code) {
     const map = {
         0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
