@@ -28,24 +28,24 @@ self.addEventListener('activate', event => {
     self.clients.claim();
 });
 
+// Reemplaza tu event listener de 'fetch' por este:
 self.addEventListener('fetch', event => {
-    const req = event.request;
-
-    if (req.url.includes('api.open-meteo.com')) {
+    if (event.request.url.includes('api.open-meteo.com')) {
         event.respondWith(
-            fetch(req)
-                .then(res => {
-                    const copy = res.clone();
-                    caches.open(API_CACHE).then(c => c.put(req, copy));
-                    return res;
+            fetch(event.request)
+                .then(response => {
+                    // Solo cacheamos si la respuesta es válida
+                    if (response.ok) {
+                        const copy = response.clone();
+                        caches.open(API_CACHE).then(cache => cache.put(event.request, copy));
+                    }
+                    return response;
                 })
-                .catch(() => caches.match(req))
+                .catch(() => caches.match(event.request))
         );
         return;
     }
-
     event.respondWith(
-        caches.match(req).then(cached => cached || fetch(req))
+        caches.match(event.request).then(cached => cached || fetch(event.request))
     );
 });
-

@@ -302,91 +302,54 @@ class WeatherApp {
 renderDailyChart(daily) {
     const labels = daily.time.map(dateStr => {
         const date = new Date(dateStr);
-        return date.toLocaleDateString('es-ES', { 
-            weekday: 'short', 
-            day: 'numeric' 
-        });
+        return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' });
     });
 
-    // Mapea códigos de clima a iconos emoji
     const weatherIcons = daily.weather_code.map(code => this.getWeatherIcon(code));
 
     if (this.dailyChart) {
         this.dailyChart.destroy();
     }
 
-    this.dailyChart = new Chart(
-        document.getElementById('dailyChart'),
-        {
-            type: 'bar',
-            data: {
-                labels,
-                datasets: [
-                    {
-                        label: 'Tª Máxima (°C)',
-                        data: daily.temperature_2m_max,
-                        backgroundColor: 'rgba(74, 144, 226, 0.8)',
-                        borderColor: '#4A90E2',
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Tª Mínima (°C)',
-                        data: daily.temperature_2m_min,
-                        backgroundColor: 'rgba(123, 104, 238, 0.6)',
-                        borderColor: '#7B68EE',
-                        borderRadius: 8,
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'top', labels: { padding: 20 } },
-                    tooltip: {
-                        callbacks: {
-                            title: function(context) {
-                                return `${context[0].label} ${weatherIcons[context[0].dataIndex]}`;
-                            },
-                            afterLabel: function(context) {
-                                const max = context.datasetIndex === 0 ? context.parsed.y : null;
-                                const min = context.datasetIndex === 1 ? context.parsed.y : null;
-                                return max && min ? 
-                                    `Rango: ${min.toFixed(1)}° → ${max.toFixed(1)}°` : '';
-                            }
-                        }
-                    },
-                    // ✅ ICONOS EN TOOLTIPS
-                    datalabels: {
-                        display: true,
-                        anchor: 'end',
-                        align: 'top',
-                        color: 'white',
-                        font: { weight: 'bold', size: 12 },
-                        formatter: (value, context) => {
-                            return weatherIcons[context.dataIndex];
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: { display: true, text: 'Temperatura (°C)' }
-                    },
-                    x: { grid: { display: false }, ticks: { maxRotation: 45 } }
-                }
-            },
-            plugins: [ChartDataLabels]  // ← Plugin para iconos encima barras
-        }
-    );
-}
+    const ctx = document.getElementById('dailyChart');
+    if (!ctx) return;
 
+    this.dailyChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Tª Máxima (°C)',
+                    data: daily.temperature_2m_max,
+                    backgroundColor: 'rgba(74, 144, 226, 0.8)',
+                    borderRadius: 8,
+                },
+                {
+                    label: 'Tª Mínima (°C)',
+                    data: daily.temperature_2m_min,
+                    backgroundColor: 'rgba(123, 104, 238, 0.6)',
+                    borderRadius: 8,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                // Desactivamos temporalmente datalabels si no carga la librería
+                datalabels: {
+                    display: typeof ChartDataLabels !== 'undefined',
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: (value, context) => weatherIcons[context.dataIndex]
+                }
+            }
+        },
+        // Solo añade el plugin si existe
+        plugins: typeof ChartDataLabels !== 'undefined' ? [ChartDataLabels] : []
+    });
+}
 
     getWeatherInfo(code) {
         const map = {
@@ -402,7 +365,7 @@ renderDailyChart(daily) {
         const r = map[code] || ['🌤️', 'Clima desconocido'];
         return { icon: r[0], description: r[1] };
     }
-    Chart.register(ChartDataLabels);
+   
     
     getWeatherIcon(code) {
     const map = {
