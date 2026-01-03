@@ -154,7 +154,7 @@ h1 {
         padding: 0 5px;
     }
 }
-options: {
+options {
     responsive: true,
     maintainAspectRatio: false, // Esto permite que el canvas se adapte al contenedor CSS
     // ... el resto de tus opciones
