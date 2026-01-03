@@ -169,9 +169,9 @@ h1 {
 }
 options {
     responsive: true,
-    maintainAspectRatio; false:// Esto permite que el canvas se adapte al contenedor CSS
-    // ... el resto de tus opciones
+    maintainAspectRatio: false;
 }
+
 
 .chart-title { color: #0c3051; font-size: 1rem; text-align: center; }
 
