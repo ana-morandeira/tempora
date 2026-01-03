@@ -44,7 +44,7 @@ class WeatherApp {
     showLoading() {
         document.getElementById('loading').classList.remove('hidden');
         document.getElementById('error').classList.add('hidden');
-        document.getElementById('currentWeather').classList.add('hidden');
+     
         // El ID 'charts' debe englobar tus dos canvas en el HTML
         const charts = document.getElementById('charts');
         if (charts) charts.classList.add('hidden');
@@ -108,80 +108,132 @@ class WeatherApp {
             name: `${r.name}${r.admin1 ? ', ' + r.admin1 : ''}${r.country ? ', ' + r.country : ''}`
         };
     }
+async fetchWeatherData(lat, lon) {
+    try {
+        this.showLoading(); // Muestra el spinner
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
 
-    async fetchWeatherData(lat, lon) {
-        try {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('Error en la API');
+        // --- PASO 1: MOSTRAR CONTENEDORES ---
+        // Lo hacemos primero para que Chart.js tenga espacio para dibujar
+        document.getElementById('currentWeather').classList.remove('hidden');
+        document.getElementById('charts').classList.remove('hidden');
 
-            const data = await res.json();
+        // --- PASO 2: ACTUALIZAR DATOS ---
+        this.displayCurrentWeather(data.current);
+        this.updateBackgroundImage(data.current.weather_code);
 
-            // 1. Tiempo actual
-            this.displayCurrentWeather(data.current);
-
-            // 2. Renderizar Gráficas
-            if (typeof Chart === 'function') {
+        // --- PASO 3: RENDERIZAR GRÁFICAS (con seguro) ---
+        if (typeof Chart !== 'undefined') {
+            try {
                 this.renderHourlyChart(data.hourly);
                 this.renderDailyChart(data.daily);
+            } catch (chartError) {
+                console.error("Error en las gráficas:", chartError);
             }
-
-            // 3. Mostrar UI
-            document.getElementById('currentWeather').classList.remove('hidden');
-            const chartsContainer = document.getElementById('charts');
-            if (chartsContainer) chartsContainer.classList.remove('hidden');
-
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('es-ES');
-
-        } catch (error) {
-            console.error(error);
-            this.showError('Error al cargar datos');
-        } finally {
-            this.hideLoading();
         }
+
+        // Actualizar hora de actualización
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+
+    } catch (error) {
+        console.error("Error general:", error);
+        this.showError('No se pudo obtener el clima');
+    } finally {
+        this.hideLoading();
     }
+}
+displayCurrentWeather(c) {
+    // 1. Datos principales
+    document.getElementById('currentTemp').textContent = `${Math.round(c.temperature_2m)}°C`;
+    
+    const info = this.getWeatherInfo(c.weather_code);
+    document.getElementById('weatherIcon').textContent = info.icon;
+    document.getElementById('weatherDescription').textContent = info.description;
 
-    displayCurrentWeather(c) {
-        document.getElementById('currentTemp').textContent = `${Math.round(c.temperature_2m)}°C`;
-        const info = this.getWeatherInfo(c.weather_code);
-        document.getElementById('weatherIcon').textContent = info.icon;
-        document.getElementById('weatherDescription').textContent = info.description;
-        document.getElementById('feelsLike').textContent = `${Math.round(c.apparent_temperature)}°C`;
-        document.getElementById('humidity').textContent = `${c.relative_humidity_2m}%`;
-        document.getElementById('windSpeed').textContent = `${c.wind_speed_10m} km/h`;
-        document.getElementById('visibility').textContent = `${(c.visibility / 1000).toFixed(1)} km`;
-        document.getElementById('pressure').textContent = `${c.surface_pressure} hPa`;
-        document.getElementById('precipitation').textContent = `${c.precipitation} mm`;
-    }
+    // 2. Mini-cards (Detalles técnicos)
+    document.getElementById('feelsLike').textContent = `${Math.round(c.apparent_temperature)}°C`;
+    document.getElementById('humidity').textContent = `${c.relative_humidity_2m}%`;
+    document.getElementById('windSpeed').textContent = `${c.wind_speed_10m} km/h`;
+    document.getElementById('visibility').textContent = `${(c.visibility / 1000).toFixed(1)} km`;
+    document.getElementById('pressure').textContent = `${c.surface_pressure} hPa`;
+    document.getElementById('precipitation').textContent = `${c.precipitation} mm`;
 
-    renderHourlyChart(hourly) {
-        const labels = hourly.time.slice(0, 48).map(t => `${new Date(t).getHours()}h`);
-        const temps = hourly.temperature_2m.slice(0, 48);
+    
+}
+  renderHourlyChart(hourly) {
+    // 1. Mapeo de códigos a iconos (puedes añadir más si quieres)
+    const weatherIcons = {
+        0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 
+        48: '🌫️', 51: '🌧️', 61: '🌧️', 80: '🌦️', 95: '⛈️'
+    };
 
-        if (this.hourlyChart) this.hourlyChart.destroy();
+    // Tomamos las 48 horas de tiempo, temperaturas y códigos de clima
+    const labels = hourly.time.slice(0, 48).map(t => `${new Date(t).getHours()}h`);
+    const temps = hourly.temperature_2m.slice(0, 48);
+    const codes = hourly.weather_code.slice(0, 48);
 
-        this.hourlyChart = new Chart(document.getElementById('hourlyChart'), {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [{
-                    label: 'Temperatura (°C)',
-                    data: temps,
-                    borderColor: '#4A90E2',
-                    backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
+    if (this.hourlyChart) this.hourlyChart.destroy();
+
+    this.hourlyChart = new Chart(document.getElementById('hourlyChart'), {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Temperatura (°C)',
+                data: temps,
+                borderColor: '#001a33', // Azul oscuro para contraste
+                backgroundColor: 'rgba(0, 26, 51, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 0, // Quitamos el punto para que no estorbe al icono
+                pointHitRadius: 20 // Pero permitimos que se pueda tocar para ver el valor
+            }]
+        },
+        plugins: [ChartDataLabels], // Importante: tener el plugin activado
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: { top: 30, bottom: 10, left: 10, right: 10 }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false } }
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    // MOSTRAMOS ICONO CADA 3 HORAS para que sea legible en móviles
+                    display: (context) => context.dataIndex % 3 === 0,
+                    formatter: (value, context) => {
+                        const code = codes[context.dataIndex];
+                        return weatherIcons[code] || '🌡️';
+                    },
+                    align: 'top',
+                    offset: 5,
+                    font: { size: 16 },
+                    color: '#001a33'
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        // MOSTRAMOS LA HORA CADA 6 HORAS en el eje X para el responsive
+                        callback: function(val, index) {
+                            return index % 6 === 0 ? this.getLabelForValue(val) : '';
+                        },
+                        color: '#001a33'
+                    }
+                },
+                y: {
+                    beginAtZero: false,
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: '#001a33' }
+                }
             }
-        });
-    }
+        }
+    });
+}
 
     renderDailyChart(daily) {
         const labels = daily.time.map(d => new Date(d).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }));
@@ -237,11 +289,34 @@ class WeatherApp {
         const map = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 61: '🌧️', 71: '🌨️', 95: '⛈️' };
         return map[code] || '🌤️';
     }
-}
 
-document.addEventListener('DOMContentLoaded', () => { new WeatherApp(); });
+    // --- NUEVO: FUNCIÓN PARA CAMBIAR EL FONDO GIF ---
+    updateBackgroundImage(code) {
+        const body = document.body;
+        // Mapeo de códigos Open-Meteo a tus archivos GIF
+        const backgrounds = {
+            0: 'despejado.gif',
+            1: 'nubes.gif', 
+            2: 'nubes.gif',
+            3: 'nublado.gif',
+            45: 'niebla.gif',
+            61: 'lluvia.gif',
+            71: 'nieve.gif',
+            95: 'tormenta.gif'
+        };
 
-/* REGISTRO DEL SERVICE WORKER (DESACTIVADO PARA DESARROLLO)
+        const fileName = backgrounds[code] || 'despejado.gif';
+        // Asegúrate de que la carpeta y nombres coincidan
+        body.style.backgroundImage = `url('images/backgrounds/${fileName}')`;
+    }
+} // <--- AQUÍ CIERRA LA CLASE WeatherApp
+
+// --- INICIALIZACIÓN ---
+document.addEventListener('DOMContentLoaded', () => { 
+    new WeatherApp(); 
+});
+
+/* REGISTRO DEL SERVICE WORKER (DESACTIVADO)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js');

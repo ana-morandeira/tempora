@@ -3,129 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Tempora </title>
+    <title>Tempora App</title> 
     <link rel="stylesheet" href="styles/index.css">
-    <link rel="manifest" href="services/manifest.json">
     <link rel="shortcut icon" href="images/logos/favicon.ico" type="image/x-icon">
-    <meta name="theme-color" content="#4A90E2">
-</head>
+<</head>
+
 <body>
     <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <h1 class="app-title">🌤️ Tempora App</h1>
+        <header>
+            <h1>
+                <img src="images/logos/temporaLogo512.png" alt="Logo" class="h1-logo">
+                Tempora App
+            </h1>
+            
+            <p id="currentDate" class="date-display"></p>
+
             <div class="search-container">
                 <input type="text" id="cityInput" placeholder="Buscar ciudad..." class="search-input">
                 <button id="searchBtn" class="search-btn">🔍</button>
                 <button id="locationBtn" class="location-btn">📍</button>
             </div>
         </header>
-        <!-- Loading Spinner -->
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>Cargando datos del clima...</p>
-        </div>
 
-        <!-- Error Message -->
-        <div id="error" class="error hidden">
-            <p>❌ Error al cargar los datos del clima</p>
-        </div>
+        <div id="loading" class="hidden">Cargando...</div>
+        <div id="error" class="hidden"></div>
 
-        <!-- Current Weather -->
-        <section id="currentWeather" class="current-weather hidden">
-            <div class="location-info">
-                <h2 id="locationName">📍 Ubicación</h2>
-                <p id="currentDate"></p>
-            </div>
-            <div class="weather-main">
-                <div class="weather-icon">
-                    <span id="weatherIcon">☀️</span>
-                </div>
-                <div class="weather-temp">
-                    <span id="currentTemp">--°C</span>
-                    <p id="weatherDescription">Cargando...</p>
+        <section id="currentWeather" class="hidden">
+            <div class="weather-main-row">
+                <div id="weatherIcon" class="main-icon">☀️</div>
+                <div class="main-temp-info">
+                    <h2 id="locationName">📍 Ubicación</h2>
+                    <div class="temp-container">
+                        <span id="currentTemp">--°C</span>
+                        <span id="weatherDescription">Despejado</span>
+                    </div>
                 </div>
             </div>
-            <div class="weather-details">
-                <div class="detail-item">
-                    <span class="detail-icon">🌡️</span>
-                    <span class="detail-label">Sensación térmica</span>
-                    <span id="feelsLike">--°C</span>
+
+            <div class="details-grid">
+                <div class="detail-card"><span class="label">🌡️ Sensación</span><span id="feelsLike" class="value">--</span></div>
+                <div class="detail-card"><span class="label">💧 Humedad</span><span id="humidity" class="value">--</span></div>
+                <div class="detail-card"><span class="label">🌬️ Viento</span><span id="windSpeed" class="value">--</span></div>
+                <div class="detail-card"><span class="label">👁️ Visibilidad</span><span id="visibility" class="value">--</span></div>
+                <div class="detail-card"><span class="label">⏲️ Presión</span><span id="pressure" class="value">--</span></div>
+                <div class="detail-card"><span class="label">🌧️ Lluvia</span><span id="precipitation" class="value">--</span></div>
+            </div>
+        </section>
+
+        <section id="charts" class="hidden">
+            <div class="chart-wrapper">
+                <h3 class="chart-title">⏰ Próximas 24 horas</h3>
+                <div class="canvas-container">
+                    <canvas id="hourlyChart"></canvas>
                 </div>
-                <div class="detail-item">
-                    <span class="detail-icon">💧</span>
-                    <span class="detail-label">Humedad</span>
-                    <span id="humidity">--%</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-icon">💨</span>
-                    <span class="detail-label">Viento</span>
-                    <span id="windSpeed">-- km/h</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-icon">👁️</span>
-                    <span class="detail-label">Visibilidad</span>
-                    <span id="visibility">-- km</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-icon">📊</span>
-                    <span class="detail-label">Presión</span>
-                    <span id="pressure">-- hPa</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-icon">☔</span>
-                    <span class="detail-label">Precipitación</span>
-                    <span id="precipitation">-- mm</span>
+            </div>
+            <div class="chart-wrapper">
+                <h3 class="chart-title">📅 Próximos 15 días</h3>
+                <div class="canvas-container">
+                    <canvas id="dailyChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- Charts -->
-<section id="charts" class="hidden">
-    <section class="bg-white/90 rounded-2xl shadow-xl p-5 mb-6">
-        <h3 class="text-center text-lg font-semibold text-sky-600 mb-4">
-            ⏰ Próximas 24 horas
-        </h3>
-        <div class="relative h-64">
-            <canvas id="hourlyChart"></canvas>
-        </div>
-    </section>
-
-    <section class="bg-white/90 rounded-2xl shadow-xl p-5">
-        <h3 class="text-center text-lg font-semibold text-sky-600 mb-4">
-            📅 Próximos 15 días
-        </h3>
-        <div class="relative h-64">
-            <canvas id="dailyChart"></canvas>
-        </div>
-    </section>
-</section>
-
-    
-          <!-- Footer -->
         <footer class="footer">
-            <p>Datos proporcionados por <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a></p>
+            <p>Datos por <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a></p>
             <p>Actualizado: <span id="lastUpdate">--</span></p>
         </footer>
     </div>     
 
-    
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
-
-        <script src="services/script.js"></script>
-
-
-    
-
-
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="services/script.js"></script>
 </body>
-
-
-
-
 </html>
-
- 
