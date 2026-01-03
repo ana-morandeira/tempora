@@ -30,8 +30,8 @@ body {
     width: 95%;
     max-width: 500px;
     z-index: 10; /* Asegura que la app esté por encima del video de fondo */
-    background: rgba(255, 255, 255, 0.25); /* Transparencia */
-    backdrop-filter: blur(12px); /* Difuminado del fondo */
+    background: rgba(255, 255, 255, 0.01); /* Transparencia */
+    backdrop-filter: blur(10px); /* Difuminado del fondo */
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
@@ -60,7 +60,7 @@ body {
 
 /* --- Títulos --- */
 h1 {
-    color: #001a33;
+    color: #0c3051;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,7 +79,7 @@ h1 {
 }
 .date-display {
     text-align: center;
-    color: #001a33;
+    color:#0c3051 ;
     font-weight: 600;
     margin-bottom: 15px;
     text-transform: capitalize; /* Para que el día salga en mayúscula */
@@ -88,7 +88,7 @@ h1 {
     flex: 1;
     padding: 10px 15px;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.5);
+    border: 1px solid rgba(12,48,81);
     background: rgba(255,255,255,0.6);
 }
 
@@ -100,7 +100,20 @@ h1 {
     cursor: pointer;
     transition: 0.2s;
 }
+#locationName {
+    color:#0c3051; /* Blanco puro */
+    font-weight: 700;
+    font-size: 2rem; /* Ajusta el tamaño si lo ves muy pequeño */
+    text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
 
+/* Si usas un icono de chincheta al lado, asegúrate de que también brille */
+.location-icon {
+    color: #168097; /* Un rojo vibrante para que destaque */
+    filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
+}
 /* --- Clima Actual --- */
 .weather-main-row {
     display: flex;
@@ -110,7 +123,7 @@ h1 {
 }
 
 .main-icon { font-size: 4rem; }
-#currentTemp { font-size: 3rem; font-weight: bold; color: #001a33; display: block; }
+#currentTemp { font-size: 3rem; font-weight: bold; color: #0c3051; display: block; }
 
 .details-grid {
     display: grid;
@@ -121,18 +134,18 @@ h1 {
 }
 
 .detail-card {
-    background: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
     padding: 10px;
     border-radius: 15px;
     text-align: center;
 }
 
 .label { font-size: 0.7rem; display: block; opacity: 0.8; }
-.value { font-weight: bold; font-size: 0.9rem; color: #001a33; }
+.value { font-weight: bold; font-size: 0.9rem; color: #0c3051; }
 
 /* --- Gráficas --- */
 .chart-wrapper {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     margin-top: 15px;
     padding: 15px;
     border-radius: 20px;
@@ -156,11 +169,11 @@ h1 {
 }
 options {
     responsive: true,
-    maintainAspectRatio: false, // Esto permite que el canvas se adapte al contenedor CSS
+    maintainAspectRatio; false:// Esto permite que el canvas se adapte al contenedor CSS
     // ... el resto de tus opciones
 }
 
-.chart-title { color: #001a33; font-size: 1rem; text-align: center; }
+.chart-title { color: #0c3051; font-size: 1rem; text-align: center; }
 
 /* --- Utilidades --- */
 .hidden { display: none !important; }

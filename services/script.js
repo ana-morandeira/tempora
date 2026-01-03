@@ -166,7 +166,7 @@ class WeatherApp {
                 labels,
                 datasets: [{
                     data: temps,
-                    borderColor: '#001a33',
+                    borderColor: '#1d5284ff',
                     backgroundColor: 'rgba(0, 26, 51, 0.1)',
                     tension: 0.4,
                     fill: true,
