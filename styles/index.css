@@ -1,27 +1,61 @@
 /* --- Estilos Globales --- */
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    background-color: #f0f4f8; /* Color base antes de los GIFs */
+    align-items: flex-start; /* Permite que el contenido crezca hacia abajo */
+    
+    /* Fondo base: un color suave que se ve mientras cargan los archivos */
+    background-color: #f0f4f8; 
+    
+    /* Configuración para el .webp (clima nublado) */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    background-repeat: no-repeat;
+    
+    /* Importante para que el contenido flote sobre el video */
+    position: relative;
     padding: 20px;
+    overflow-x: hidden; /* Evita scrolls horizontales raros en móvil */
+    
+    /* Suaviza el cambio de fondos .webp */
+    transition: background-image 0.5s ease-in-out;
 }
 
+/* Ajuste para el contenedor de la App (Efecto Cristal) */
 .app-container {
-    width: 100%;
+    width: 95%;
     max-width: 500px;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 30px;
+    z-index: 10; /* Asegura que la app esté por encima del video de fondo */
+    background: rgba(255, 255, 255, 0.25); /* Transparencia */
+    backdrop-filter: blur(12px); /* Difuminado del fondo */
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 25px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    box-sizing: border-box; /* VITAL: asegura que el padding no sume ancho extra */
+    overflow: hidden; /* Evita que el contenido se salga */
+}
+
+/* ESTO ES VITAL: El video debe estar detrás de todo */
+#video-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Envía el video al fondo total */
+    background: transparent;
+}
+
+#bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cubre toda la pantalla sin deformar */
 }
 
 /* --- Títulos --- */
@@ -80,9 +114,10 @@ h1 {
 
 .details-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-top: 20px;
+    width: 100%
 }
 
 .detail-card {
@@ -105,15 +140,24 @@ h1 {
 
 .canvas-container {
     position: relative;
-    /* Usamos vw (viewport width) o % para que sea flexible */
     width: 100%;
-    height: 300px; /* Altura fija para evitar que colapse */
-    margin: 0 auto;
+    /* Altura dinámica: más pequeña en móviles, más grande en escritorio */
+    height: 250px; 
+    margin-top: 20px;
+    box-sizing: border-box;
 }
 
-canvas {
-    width: 100% !important;
-    height: 100% !important;
+/* Media Query para pantallas pequeñas (Móviles) */
+@media (max-width: 480px) {
+    .canvas-container {
+        height: 200px; /* Reducimos la altura para que quepa todo el dashboard */
+        padding: 0 5px;
+    }
+}
+options: {
+    responsive: true,
+    maintainAspectRatio: false, // Esto permite que el canvas se adapte al contenedor CSS
+    // ... el resto de tus opciones
 }
 
 .chart-title { color: #001a33; font-size: 1rem; text-align: center; }
