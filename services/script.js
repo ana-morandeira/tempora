@@ -157,7 +157,11 @@ class WeatherApp {
         const labels = hourly.time.slice(0, 24).map(t => `${new Date(t).getHours()}h`);
         const temps = hourly.temperature_2m.slice(0, 24);
         const codes = hourly.weather_code.slice(0, 24);
-
+        // DENTRO de tu archivo .js (donde creas la gráfica)
+const options = {
+    responsive: true,
+    maintainAspectRatio: false // Cambiado ; por nada (o coma si sigue otra propiedad)
+}; // Cerrar el objeto correctamente
         if (this.hourlyChart) this.hourlyChart.destroy();
 
         this.hourlyChart = new Chart(document.getElementById('hourlyChart'), {

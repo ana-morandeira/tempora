@@ -167,10 +167,6 @@ h1 {
         padding: 0 5px;
     }
 }
-options {
-    responsive: true,
-    maintainAspectRatio: false;
-}
 
 
 .chart-title { color: #0c3051; font-size: 1rem; text-align: center; }
