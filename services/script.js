@@ -84,7 +84,7 @@ class WeatherApp {
                 suggestions.style.display = 'none';
                 // Usamos directamente las coordenadas para ser más rápidos
                 this.fetchWeatherData(city.latitude, city.longitude);
-                document.getElementById('locationName').textContent = `📍 ${name}`;
+                document.getElementById('locationName').textContent = `${name}`;
             });
             suggestions.appendChild(div);
         });
@@ -135,7 +135,7 @@ class WeatherApp {
             );
             const { latitude, longitude } = position.coords;
             await this.fetchWeatherData(latitude, longitude);
-            document.getElementById('locationName').textContent = `📍 Ubicación actual`;
+            document.getElementById('locationName').textContent = ` Ubicación actual`;
         } catch {
             this.showError('No se pudo obtener la ubicación');
         }
@@ -150,7 +150,7 @@ class WeatherApp {
                 return;
             }
             await this.fetchWeatherData(coords.lat, coords.lon);
-            document.getElementById('locationName').textContent = `📍 ${coords.name}`;
+            document.getElementById('locationName').textContent = `coords.name`;
             document.getElementById('cityInput').value = '';
         } catch {
             this.showError('Error al buscar la ciudad');
