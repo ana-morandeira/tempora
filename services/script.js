@@ -172,7 +172,7 @@ class WeatherApp {
     async fetchWeatherData(lat, lon) {
         try {
             this.showLoading();
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,is_day,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
+           const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,is_day,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
 
             const res = await fetch(url);
             if (!res.ok) throw new Error();
@@ -245,7 +245,6 @@ class WeatherApp {
                     yAxisID: 'y1',
                     borderRadius: 4,
                     order: 3
-                    barPercentage: 0.6 // Barras un poco más anchas
                 },
                 {
                     type: 'line',
