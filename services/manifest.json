@@ -10,13 +10,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "images/temporaLogo512.png",
+      "src": "images/logos/temporaLogo192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "images/temporaLogo512.png",
+      "src": "images/logos/temporaLogo512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
