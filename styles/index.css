@@ -70,28 +70,59 @@ h1 {
 }
 
 .h1-logo { width: 45px; height: auto; }
-
 /* --- Buscador --- */
 .search-container {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
-}
-.date-display {
-    text-align: center;
-    color:#0c3051 ;
-    font-weight: 600;
-    margin-bottom: 15px;
-    text-transform: capitalize; /* Para que el día salga en mayúscula */
-}
-.search-input {
-    flex: 1;
-    padding: 10px 15px;
-    border-radius: 12px;
-    border: 1px solid rgba(12,48,81);
-    background: rgba(255,255,255,0.6);
+    position: relative; /* Base para el alineamiento */
 }
 
+/* Nuevo Wrapper para que el input y las sugerencias se mantengan juntos */
+.search-wrapper {
+    position: relative;
+    flex: 1; /* Esto hace que el input ocupe el espacio sobrante */
+}
+
+.search-input {
+    width: 100%; /* Ocupa todo el wrapper */
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid rgb(12, 48, 81);
+    background: rgba(255, 255, 255, 0.6);
+    box-sizing: border-box; /* Evita que el padding ensanche el input */
+}
+
+/* --- Lista de Predicciones (Añadido) --- */
+.suggestions-list {
+    position: absolute;
+    top: 100%; /* Aparece justo debajo del input */
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9); /* Un poco más opaco para leer bien las ciudades */
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 12px 12px;
+    border: 1px solid rgba(12, 48, 81, 0.2);
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; /* Se activa con JS */
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #0c3051;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.suggestion-item:hover {
+    background: rgba(12, 48, 81, 0.1);
+}
+
+/* --- Botones --- */
 .search-btn, .location-btn {
     background: white;
     border: none;
@@ -99,20 +130,38 @@ h1 {
     border-radius: 12px;
     cursor: pointer;
     transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Para que midan lo mismo que el input */
 }
+
+.search-btn:hover, .location-btn:hover {
+    background: #eef2f3;
+}
+
+/* --- Textos y Títulos --- */
+.date-display {
+    text-align: center;
+    color: #0c3051;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: capitalize;
+}
+
 #locationName {
-    color:#0c3051; /* Blanco puro */
+    color: #ffffff; /* Cambiado a Blanco para el efecto cristal */
     font-weight: 700;
-    font-size: 2rem; /* Ajusta el tamaño si lo ves muy pequeño */
-    text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5); /* Sombra para legibilidad */
+    font-size: 2rem;
+    text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
     margin-top: 10px;
     letter-spacing: 0.5px;
 }
 
-/* Si usas un icono de chincheta al lado, asegúrate de que también brille */
 .location-icon {
-    color: #168097; /* Un rojo vibrante para que destaque */
+    color: #168097;
     filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
+}
 }
 /* --- Clima Actual --- */
 .weather-main-row {

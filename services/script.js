@@ -13,20 +13,80 @@ class WeatherApp {
     }
 
     bindEvents() {
+        const cityInput = document.getElementById('cityInput');
+        const suggestions = document.getElementById('suggestions');
+
+        // Evento para el botón de buscar
         document.getElementById('searchBtn').addEventListener('click', () => {
-            const city = document.getElementById('cityInput').value.trim();
+            const city = cityInput.value.trim();
             if (city) this.searchByCity(city);
+            suggestions.style.display = 'none';
         });
 
-        document.getElementById('cityInput').addEventListener('keydown', (e) => {
+        // Evento para la tecla Enter
+        cityInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const city = e.target.value.trim();
                 if (city) this.searchByCity(city);
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // --- LÓGICA DEL PREDICTOR ---
+        cityInput.addEventListener('input', async () => {
+            const query = cityInput.value.trim();
+            if (query.length < 3) {
+                suggestions.style.display = 'none';
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=es&format=json`);
+                const data = await res.json();
+
+                if (data.results) {
+                    this.renderSuggestions(data.results);
+                } else {
+                    suggestions.style.display = 'none';
+                }
+            } catch (err) {
+                console.error("Error en predictor", err);
+            }
+        });
+
+        // Cerrar sugerencias al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-wrapper')) {
+                suggestions.style.display = 'none';
             }
         });
 
         document.getElementById('locationBtn').addEventListener('click', () => {
             this.getCurrentLocation();
+        });
+    }
+
+    // Método para dibujar las sugerencias
+    renderSuggestions(cities) {
+        const suggestions = document.getElementById('suggestions');
+        const cityInput = document.getElementById('cityInput');
+        suggestions.innerHTML = '';
+        suggestions.style.display = 'block';
+
+        cities.forEach(city => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            const name = `${city.name}${city.admin1 ? ', ' + city.admin1 : ''}, ${city.country}`;
+            div.textContent = name;
+
+            div.addEventListener('click', () => {
+                cityInput.value = city.name;
+                suggestions.style.display = 'none';
+                // Usamos directamente las coordenadas para ser más rápidos
+                this.fetchWeatherData(city.latitude, city.longitude);
+                document.getElementById('locationName').textContent = `📍 ${name}`;
+            });
+            suggestions.appendChild(div);
         });
     }
 
@@ -98,16 +158,14 @@ class WeatherApp {
     }
 
     async geocodeCity(city) {
-        const res = await fetch(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es`
-        );
+        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es`);
         const data = await res.json();
         if (!data.results?.length) return null;
         const r = data.results[0];
         return {
             lat: r.latitude,
             lon: r.longitude,
-            name: `${r.name}${r.admin1 ? ', ' + r.admin1 : ''}${r.country ? ', ' + r.country : ''}`
+            name: `${r.name}${r.admin1 ? ', ' + r.admin1 : ''}, ${r.country}`
         };
     }
 
@@ -157,11 +215,7 @@ class WeatherApp {
         const labels = hourly.time.slice(0, 24).map(t => `${new Date(t).getHours()}h`);
         const temps = hourly.temperature_2m.slice(0, 24);
         const codes = hourly.weather_code.slice(0, 24);
-        // DENTRO de tu archivo .js (donde creas la gráfica)
-const options = {
-    responsive: true,
-    maintainAspectRatio: false // Cambiado ; por nada (o coma si sigue otra propiedad)
-}; // Cerrar el objeto correctamente
+
         if (this.hourlyChart) this.hourlyChart.destroy();
 
         this.hourlyChart = new Chart(document.getElementById('hourlyChart'), {
@@ -170,11 +224,11 @@ const options = {
                 labels,
                 datasets: [{
                     data: temps,
-                    borderColor: '#1d5284ff',
-                    backgroundColor: 'rgba(0, 26, 51, 0.1)',
+                    borderColor: '#ffffff', // Línea blanca para mejor contraste
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     tension: 0.4,
                     fill: true,
-                    pointRadius: 0
+                    pointRadius: 2
                 }]
             },
             plugins: [ChartDataLabels],
@@ -187,13 +241,13 @@ const options = {
                         display: (ctx) => ctx.dataIndex % 3 === 0,
                         formatter: (val, ctx) => weatherIconsMap[codes[ctx.dataIndex]] || '🌡️',
                         align: 'top',
-                        color: '#001a33',
+                        color: '#ffffff', // Iconos en blanco
                         font: { size: 14 }
                     }
                 },
                 scales: { 
-                    x: { grid: { display: false } },
-                    y: { grid: { color: 'rgba(0,0,0,0.05)' } }
+                    x: { ticks: { color: '#ffffff' }, grid: { display: false } },
+                    y: { ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
                 }
             }
         });
@@ -208,20 +262,25 @@ const options = {
             data: {
                 labels,
                 datasets: [
-                    { label: 'Máx', data: daily.temperature_2m_max, backgroundColor: '#4A90E2', borderRadius: 5 },
-                    { label: 'Mín', data: daily.temperature_2m_min, backgroundColor: '#7B68EE', borderRadius: 5 }
+                    { label: 'Máx', data: daily.temperature_2m_max, backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 5 },
+                    { label: 'Mín', data: daily.temperature_2m_min, backgroundColor: 'rgba(255,255,255,0.4)', borderRadius: 5 }
                 ]
             },
             plugins: [ChartDataLabels],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                scales: {
+                    x: { ticks: { color: '#ffffff' } },
+                    y: { ticks: { color: '#ffffff' } }
+                },
                 plugins: {
+                    legend: { labels: { color: '#ffffff' } },
                     datalabels: {
                         anchor: 'end',
                         align: 'top',
                         formatter: (val, ctx) => ctx.datasetIndex === 0 ? this.getWeatherIcon(daily.weather_code[ctx.dataIndex]) : '',
-                        color: '#001a33'
+                        color: '#ffffff'
                     }
                 }
             }
@@ -240,45 +299,40 @@ const options = {
     }
 
     updateBackgroundImage(code, isDay) {
-    const videoElement = document.getElementById('bg-video');
-    const body = document.body;
-    let fileName = '';
+        const videoElement = document.getElementById('bg-video');
+        const body = document.body;
+        let fileName = '';
 
-    // 1. Lógica de selección de archivo (Asegúrate de que las extensiones sean correctas)
-    if (isDay === 1) {
-        if (code === 0) fileName = 'sunDay.webm';
-        else if (code <= 3) fileName = 'cloudyDay.webp'; // <--- TU WEBP
-        else if (code >= 71 && code <= 77) fileName = 'snowDay.webm';
-        else if (code >= 51 && code <= 82) fileName = 'rainDay.webm';
-        else if (code >= 95) fileName = 'stormDay.webm';
-        else fileName = 'sunDay.webm';
-    } else {
-        if (code === 0) fileName = 'starsNight.webm';
-        else if (code <= 3) fileName = 'cloudyNight.webm';
-        else if (code >= 71 && code <= 77) fileName = 'snowNight.webm';
-        else if (code >= 51 && code <= 82) fileName = 'rainNight.webm';
-        else if (code >= 95) fileName = 'stormNight.webm';
-        else fileName = 'starsNight.webm';
+        if (isDay === 1) {
+            if (code === 0) fileName = 'sunDay.webm';
+            else if (code <= 3) fileName = 'cloudyDay.webp';
+            else if (code >= 71 && code <= 77) fileName = 'snowDay.webm';
+            else if (code >= 51 && code <= 82) fileName = 'rainDay.webm';
+            else if (code >= 95) fileName = 'stormDay.webm';
+            else fileName = 'sunDay.webm';
+        } else {
+            if (code === 0) fileName = 'starsNight.webm';
+            else if (code <= 3) fileName = 'cloudyNight.webm';
+            else if (code >= 71 && code <= 77) fileName = 'snowNight.webm';
+            else if (code >= 51 && code <= 82) fileName = 'rainNight.webm';
+            else if (code >= 95) fileName = 'stormNight.webm';
+            else fileName = 'starsNight.webm';
+        }
+
+        const fullPath = `images/backgrounds/${fileName}`;
+
+        if (fileName.endsWith('.webm')) {
+            videoElement.style.display = 'block';
+            videoElement.src = fullPath;
+            videoElement.load();
+            body.style.backgroundImage = 'none';
+        } else {
+            videoElement.style.display = 'none';
+            body.style.backgroundImage = `url('${fullPath}')`;
+            body.style.backgroundSize = 'cover';
+            body.style.backgroundPosition = 'center';
+        }
     }
-
-    const fullPath = `images/backgrounds/${fileName}`;
-
-
-    // 2. ¿Es Vídeo o Imagen?
-    if (fileName.endsWith('.webm')) {
-        // MOSTRAR VÍDEO, OCULTAR FONDO DEL BODY
-        videoElement.style.display = 'block';
-        videoElement.src = fullPath;
-        videoElement.load();
-        body.style.backgroundImage = 'none';
-    } else {
-        // MOSTRAR IMAGEN EN EL BODY, OCULTAR VÍDEO
-        videoElement.style.display = 'none';
-        body.style.backgroundImage = `url('${fullPath}')`;
-        body.style.backgroundSize = 'cover';
-        body.style.backgroundPosition = 'center';
-    }
-}
 }
 
 document.addEventListener('DOMContentLoaded', () => { new WeatherApp(); });
