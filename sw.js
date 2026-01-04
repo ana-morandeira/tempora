@@ -1,5 +1,5 @@
-const STATIC_CACHE = 'tempora-static-v2';
-const API_CACHE = 'tempora-api-v2';
+const STATIC_CACHE = 'tempora-static-v3';
+const API_CACHE = 'tempora-api-v3';
 
 const STATIC_FILES = [
    './',
@@ -31,14 +31,15 @@ self.addEventListener('activate', event => {
 
 // Reemplaza tu event listener de 'fetch' por este:
 self.addEventListener('fetch', event => {
+    // 1. Estrategia especial para la API (Internet primero)
     if (event.request.url.includes('api.open-meteo.com')) {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
-                    // Solo cacheamos si la respuesta es válida
                     if (response.ok) {
                         const copy = response.clone();
-                        caches.open(API_CACHE).then(cache => cache.put(event.request, copy));
+                      // Dentro del fetch de la API, cambia:
+                        caches.open(API_CACHE).then(cache => cache.put(event.request, copy)); 
                     }
                     return response;
                 })
@@ -46,7 +47,22 @@ self.addEventListener('fetch', event => {
         );
         return;
     }
+
+  // 2. Estrategia para archivos de la App (HTML, JS, CSS, Imágenes)
     event.respondWith(
-        caches.match(event.request).then(cached => cached || fetch(event.request))
+        caches.match(event.request).then(cachedResponse => {
+            // Si está en caché, lo devuelve, pero lanza un fetch para actualizar la caché
+            const fetchPromise = fetch(event.request).then(networkResponse => {
+                if (networkResponse && networkResponse.ok) {
+                    const copy = networkResponse.clone();
+                    caches.open(STATIC_CACHE).then(cache => cache.put(event.request, copy));
+                }
+                return networkResponse;
+            }).catch(() => {
+                // Si falla la red, no pasa nada, ya devolvimos la caché
+            });
+
+            return cachedResponse || fetchPromise;
+        })
     );
-});
+}); // Fin del evento fetch

@@ -5,6 +5,7 @@ class WeatherApp {
         this.dailyChart = null;
         this.initializeApp();
         this.bindEvents();
+        this.startTime();
     }
 
     initializeApp() {
@@ -150,7 +151,7 @@ class WeatherApp {
                 return;
             }
             await this.fetchWeatherData(coords.lat, coords.lon);
-            document.getElementById('locationName').textContent = `coords.name`;
+            document.getElementById('locationName').textContent = coords.name;
             document.getElementById('cityInput').value = '';
         } catch {
             this.showError('Error al buscar la ciudad');
@@ -169,45 +170,62 @@ class WeatherApp {
         };
     }
 
-    async fetchWeatherData(lat, lon) {
-        try {
-            this.showLoading();
-           const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,is_day,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
+   async fetchWeatherData(lat, lon) {
+    try {
+        this.showLoading();
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,is_day,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
 
-            const res = await fetch(url);
-            if (!res.ok) throw new Error();
-            const data = await res.json();
+        const res = await fetch(url);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
 
-            document.getElementById('currentWeather').classList.remove('hidden');
-            document.getElementById('charts').classList.remove('hidden');
+        // Verificamos que los contenedores existan antes de quitar 'hidden'
+        const weatherCont = document.getElementById('currentWeather');
+        const chartsCont = document.getElementById('charts');
+        if (weatherCont) weatherCont.classList.remove('hidden');
+        if (chartsCont) chartsCont.classList.remove('hidden');
 
-            this.displayCurrentWeather(data.current);
-            this.updateBackgroundImage(data.current.weather_code, data.current.is_day);
+        this.displayCurrentWeather(data.current);
+        this.updateBackgroundImage(data.current.weather_code, data.current.is_day);
 
-            if (typeof Chart !== 'undefined') {
-                this.renderHourlyChart(data.hourly);
-                this.renderDailyChart(data.daily);
-            }
-
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        } catch (error) {
-            this.showError('Error al obtener datos climáticos');
-        } finally {
-            this.hideLoading();
+        if (typeof Chart !== 'undefined') {
+            this.renderHourlyChart(data.hourly);
+            this.renderDailyChart(data.daily);
         }
-    }
 
-    displayCurrentWeather(c) {
-        document.getElementById('currentTemp').textContent = `${Math.round(c.temperature_2m)}°C`;
+        // --- SOLUCIÓN AQUÍ ---
+        // Protegemos la línea de lastUpdate para que no lance error si no existe el ID
+        const lastUpdateEl = document.getElementById('lastUpdate') || document.getElementById('update-time');
+        if (lastUpdateEl) {
+            lastUpdateEl.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+
+    } catch (error) {
+        console.error("Error real:", error); // Esto te dirá el error exacto en consola (F12)
+        this.showError('Error al obtener datos climáticos');
+    } finally {
+        this.hideLoading();
+    }
+}
+displayCurrentWeather(c) {
+        const safeSet = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+
+        safeSet('currentTemp', `${Math.round(c.temperature_2m)}°C`);
+        
         const info = this.getWeatherInfo(c.weather_code);
-        document.getElementById('weatherIcon').textContent = info.icon;
-        document.getElementById('weatherDescription').textContent = info.description;
-        document.getElementById('feelsLike').textContent = `${Math.round(c.apparent_temperature)}°C`;
-        document.getElementById('humidity').textContent = `${c.relative_humidity_2m}%`;
-        document.getElementById('windSpeed').textContent = `${c.wind_speed_10m} km/h`;
-        document.getElementById('visibility').textContent = `${(c.visibility / 1000).toFixed(1)} km`;
-        document.getElementById('pressure').textContent = `${c.surface_pressure} hPa`;
-        document.getElementById('precipitation').textContent = `${c.precipitation} mm`;
+        safeSet('weatherIcon', info.icon);
+        safeSet('weatherDescription', info.description);
+        
+        safeSet('feelsLike', `${Math.round(c.apparent_temperature)}°C`);
+        safeSet('humidity', `${c.relative_humidity_2m}%`);
+        safeSet('windSpeed', `${c.wind_speed_10m} km/h`);
+        safeSet('visibility', `${(c.visibility / 1000).toFixed(1)} km`);
+        safeSet('pressure', `${c.surface_pressure} hPa`);
+        safeSet('precipitation', `${c.precipitation} mm`);
     }
 
   renderHourlyChart(hourly) {
@@ -383,14 +401,52 @@ class WeatherApp {
             body.style.backgroundPosition = 'center';
         }
     }
+    startTime() {
+    const updateTime = () => {
+        const el = document.getElementById('localTime');
+        if (el) {
+            const now = new Date();
+            el.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        }
+    };
+    updateTime();
+    setInterval(updateTime, 60000); // Se actualiza cada minuto
+}
 }
 
-document.addEventListener('DOMContentLoaded', () => { new WeatherApp(); });
+// Creamos la instancia y la hacemos global para poder usarla desde la consola
+const miApp = new WeatherApp();
+window.miApp = miApp;
+
+// (Opcional) Si quieres mantener el listener de carga por seguridad:
+document.addEventListener('DOMContentLoaded', () => {
+    // La app ya se inició arriba, pero aquí nos aseguramos de que el DOM esté listo
+    console.log("Tempora App lista y conectada a window.miApp");
+});
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado con éxito', reg))
-            .catch(err => console.warn('Error al registrar el Service Worker', err));
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+            // Caso 1: Detecta actualizaciones mientras la App está abierta
+            reg.onupdatefound = () => {
+                const installingWorker = reg.installing;
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        console.log('Nueva versión instalada. Recargando...');
+                        window.location.reload();
+                    }
+                };
+            };
+        });
+    });
+
+    // Caso 2: El "Seguro de Vida". Si el Service Worker se activa, 
+    // obliga a la página a refrescarse para usar el código nuevo.
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+            window.location.reload();
+            refreshing = true;
+        }
     });
 }
