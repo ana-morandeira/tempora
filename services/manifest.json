@@ -2,7 +2,7 @@
   "name": "Tempora App",
   "short_name": "Tempora",
   "description": "Aplicación meteorológica con pronóstico detallado y predictor de ciudades",
-  "start_url": "./index.html",
+  "start_url": "../index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0c3051",

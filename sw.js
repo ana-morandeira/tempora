@@ -1,5 +1,5 @@
-const STATIC_CACHE = 'tempora-static-v1';
-const API_CACHE = 'tempora-api-v1';
+const STATIC_CACHE = 'tempora-static-v2';
+const API_CACHE = 'tempora-api-v2';
 
 const STATIC_FILES = [
    './',
