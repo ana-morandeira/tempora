@@ -6,6 +6,7 @@ class WeatherApp {
         this.initializeApp();
         this.bindEvents();
         this.startTime();
+        this.utcOffsetSeconds = undefined;
     }
 
     initializeApp() {
@@ -170,7 +171,7 @@ class WeatherApp {
         };
     }
 
- async fetchWeatherData(lat, lon) {
+async fetchWeatherData(lat, lon) {
     try {
         this.showLoading();
         
@@ -418,18 +419,35 @@ displayCurrentWeather(c) {
             body.style.backgroundSize = 'cover';
             body.style.backgroundPosition = 'center';
         }
-    }
-    startTime() {
-    const updateTime = () => {
-        const el = document.getElementById('localTime');
-        if (el) {
+    }startTime() {
+        const updateTime = () => {
+            const el = document.getElementById('localTime');
+            if (!el) return;
+
             const now = new Date();
-            el.textContent = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-        }
-    };
-    updateTime();
-    setInterval(updateTime, 60000); // Se actualiza cada minuto
-}
+            
+            // Si tenemos el offset de la ciudad buscada, lo usamos. 
+            // Si no (al arrancar la app), usamos el offset local del móvil.
+            const offset = (this.utcOffsetSeconds !== undefined) 
+                ? this.utcOffsetSeconds 
+                : (now.getTimezoneOffset() * -60);
+
+            // Calculamos la hora real del destino
+            const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const targetTime = new Date(utcTime + (offset * 1000));
+
+            el.textContent = targetTime.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        };
+
+        updateTime();
+        // Lo actualizamos cada segundo (1000ms) para que el cambio sea instantáneo al buscar
+        setInterval(updateTime, 1000); 
+    }
+
+
 }
 
 // Creamos la instancia y la hacemos global para poder usarla desde la consola

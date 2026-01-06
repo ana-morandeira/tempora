@@ -1,5 +1,5 @@
-const STATIC_CACHE = 'tempora-static-v3';
-const API_CACHE = 'tempora-api-v3';
+const STATIC_CACHE = 'tempora-static-v5';
+const API_CACHE = 'tempora-api-v5';
 
 const STATIC_FILES = [
    './',
@@ -7,6 +7,7 @@ const STATIC_FILES = [
     './styles/index.css',
     './services/script.js',
     './services/chart.min.js',
+    './services/datalabels.min.js',
     './services/manifest.json',
     './favicon_io/android-chrome-512x512.png'
 ];
