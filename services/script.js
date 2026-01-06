@@ -1,13 +1,17 @@
+if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
+    Chart.register(ChartDataLabels);
+}
+
 class WeatherApp {
     constructor() {
         this.currentLocation = null;
         this.hourlyChart = null;
         this.dailyChart = null;
+         this.utcOffsetSeconds = undefined;
         this.initializeApp();
         this.bindEvents();
         this.startTime();
-        this.utcOffsetSeconds = undefined;
-    }
+         }
 
     initializeApp() {
         this.updateCurrentDate();
@@ -234,11 +238,9 @@ displayCurrentWeather(c) {
         };
 
         safeSet('currentTemp', `${Math.round(c.temperature_2m)}°C`);
-        
         const info = this.getWeatherInfo(c.weather_code);
         safeSet('weatherIcon', info.icon);
         safeSet('weatherDescription', info.description);
-        
         safeSet('feelsLike', `${Math.round(c.apparent_temperature)}°C`);
         safeSet('humidity', `${c.relative_humidity_2m}%`);
         safeSet('windSpeed', `${c.wind_speed_10m} km/h`);
@@ -247,104 +249,110 @@ displayCurrentWeather(c) {
         safeSet('precipitation', `${c.precipitation} mm`);
     }
 
-  renderHourlyChart(hourly) {
-    const weatherIconsMap = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 51: '🌧️', 61: '🌧️', 71: '❄️', 95: '⛈️' };
-    const labels = hourly.time.slice(0, 24).map(t => `${new Date(t).getHours()}h`);
-    
-    // Datos de la API
-    const temps = hourly.temperature_2m.slice(0, 24);
-    const rain = hourly.precipitation ? hourly.precipitation.slice(0, 24) : new Array(24).fill(0);
-    const wind = hourly.wind_speed_10m ? hourly.wind_speed_10m.slice(0, 24) : hourly.temperature_2m.slice(0, 24).map(() => 0); 
-    const codes = hourly.weather_code.slice(0, 24);
+    renderHourlyChart(hourly) {
+        if (typeof Chart === 'undefined') return; // Seguridad: si no hay librería, no rompas la app
+        
+        const weatherIconsMap = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 51: '🌧️', 61: '🌧️', 71: '❄️', 95: '⛈️' };
+        const labels = hourly.time.slice(0, 24).map(t => `${new Date(t).getHours()}h`);
+        const temps = hourly.temperature_2m.slice(0, 24);
+        const rain = hourly.precipitation ? hourly.precipitation.slice(0, 24) : new Array(24).fill(0);
+        const wind = hourly.wind_speed_10m ? hourly.wind_speed_10m.slice(0, 24) : new Array(24).fill(0); 
+        const codes = hourly.weather_code.slice(0, 24);
 
-    if (this.hourlyChart) this.hourlyChart.destroy();
+        const ctx = document.getElementById('hourlyChart');
+        if (!ctx) return;
+        if (this.hourlyChart) this.hourlyChart.destroy();
 
-    this.hourlyChart = new Chart(document.getElementById('hourlyChart'), {
-        data: {
-            labels,
-            datasets: [
-                {
-                    type: 'line',
-                    label: 'Temp',
-                    data: temps,
-                    borderColor: '#ffffff',
-                    borderWidth: 4,
-                    yAxisID: 'y',
-                    tension: 0.4,
-                    pointRadius: 0,
-                    order: 1
-                },
-                {
-                    type: 'bar',
-                    label: 'Lluvia (mm)',
-                    data: rain,
-                    backgroundColor: 'rgba(0, 217, 255, 0.6)',
-                    yAxisID: 'y1',
-                    borderRadius: 4,
-                    order: 3
-                },
-                {
-                    type: 'line',
-                    label: 'Viento (km/h)',
-                    data: wind,
-                    borderColor:'#fffa81',
-                    borderDash: [5, 5],
-                    borderWidth: 3,
-                    yAxisID: 'y1', // Comparte eje con lluvia por ser valores similares
-                    pointRadius: 0,
-                    fill: false,
-                    tension: 0.4,
-                    order: 2
-                }
-            ]
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-                legend: {
-                    display: true,
-                    labels: { color: '#ffffff', usePointStyle: true, font: { size: 10 } }
-                },
-                datalabels: {
-                    display: (ctx) => ctx.datasetIndex === 0 && ctx.dataIndex % 4 === 0,
-                    formatter: (val, ctx) => `${Math.round(val)}°\n${weatherIconsMap[codes[ctx.dataIndex]] || ''}`,
-                    color: '#ffffff',
-                    align: 'top',
-                    textAlign: 'center',
-                    font: { weight: 'bold' }
-                }
+        this.hourlyChart = new Chart(ctx, {
+            data: {
+                labels,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Temp',
+                        data: temps,
+                        borderColor: '#ffffff',
+                        borderWidth: 4,
+                        yAxisID: 'y',
+                        tension: 0.4,
+                        pointRadius: 0,
+                        order: 1
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Lluvia (mm)',
+                        data: rain,
+                        backgroundColor: 'rgba(0, 217, 255, 0.6)',
+                        yAxisID: 'y1',
+                        borderRadius: 4,
+                        order: 3
+                    },
+                    {
+                        type: 'line',
+                        label: 'Viento (km/h)',
+                        data: wind,
+                        borderColor:'#fffa81',
+                        borderDash: [5, 5],
+                        borderWidth: 3,
+                        yAxisID: 'y1',
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0.4,
+                        order: 2
+                    }
+                ]
             },
-            scales: {
-                x: { ticks: { color: '#ffffff' }, grid: { display: false } },
-                y: { // Eje de Temperatura
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    ticks: { color: '#ffffff' },
-                    grid: { color: 'rgba(255,255,255,0.1)' }
+            plugins: [], 
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: { color: '#ffffff', usePointStyle: true, font: { size: 10 } }
+                    },
+                    datalabels: {
+                        display: (ctx) => ctx.datasetIndex === 0 && ctx.dataIndex % 4 === 0,
+                        formatter: (val, ctx) => `${Math.round(val)}°\n${weatherIconsMap[codes[ctx.dataIndex]] || ''}`,
+                        color: '#ffffff',
+                        align: 'top',
+                        textAlign: 'center',
+                        font: { weight: 'bold' }
+                    }
                 },
-                y1: { // Eje de Lluvia/Viento
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    min: 0,
-                    suggestedMax: 10,
-                    ticks: { color: 'rgba(255,255,255,0.6)' },
-                    grid: { display: false } // No duplicamos líneas de grid
+                scales: {
+                    x: { ticks: { color: '#ffffff' }, grid: { display: false } },
+                    y: { 
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        ticks: { color: '#ffffff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    y1: { 
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        min: 0,
+                        suggestedMax: 10,
+                        ticks: { color: 'rgba(255,255,255,0.6)' },
+                        grid: { display: false }
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
     renderDailyChart(daily) {
+        if (typeof Chart === 'undefined') return; // Seguridad
+        
         const labels = daily.time.map(d => new Date(d).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }));
+        const ctx = document.getElementById('dailyChart');
+        if (!ctx) return;
         if (this.dailyChart) this.dailyChart.destroy();
 
-        this.dailyChart = new Chart(document.getElementById('dailyChart'), {
+        this.dailyChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels,
@@ -353,7 +361,7 @@ displayCurrentWeather(c) {
                     { label: 'Mín', data: daily.temperature_2m_min, backgroundColor: 'rgba(255,255,255,0.4)', borderRadius: 5 }
                 ]
             },
-            plugins: [ChartDataLabels],
+            plugins: [], 
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -384,7 +392,6 @@ displayCurrentWeather(c) {
         const map = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 61: '🌧️', 71: '🌨️', 95: '⛈️' };
         return map[code] || '🌤️';
     }
-
     updateBackgroundImage(code, isDay) {
         const videoElement = document.getElementById('bg-video');
         const body = document.body;
