@@ -170,39 +170,57 @@ class WeatherApp {
         };
     }
 
-   async fetchWeatherData(lat, lon) {
+ async fetchWeatherData(lat, lon) {
     try {
         this.showLoading();
+        
+        // Añadimos &timezone=auto para que la API nos devuelva el offset exacto del lugar
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,is_day,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
 
         const res = await fetch(url);
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error("Error en la respuesta de la red");
+        
         const data = await res.json();
 
-        // Verificamos que los contenedores existan antes de quitar 'hidden'
+        // --- 1. GUARDAR DATOS DE ZONA HORARIA ---
+        // Guardamos el desplazamiento en segundos para el reloj internacional
+        this.utcOffsetSeconds = data.utc_offset_seconds; 
+        
+        // --- 2. GESTIÓN DE LA INTERFAZ ---
         const weatherCont = document.getElementById('currentWeather');
         const chartsCont = document.getElementById('charts');
+        
+        // Quitamos el 'hidden' solo si los elementos existen
         if (weatherCont) weatherCont.classList.remove('hidden');
         if (chartsCont) chartsCont.classList.remove('hidden');
 
+        // Pintamos los datos actuales e imagen de fondo
         this.displayCurrentWeather(data.current);
         this.updateBackgroundImage(data.current.weather_code, data.current.is_day);
 
+        // --- 3. RENDERIZADO DE GRÁFICOS ---
+        // Verificamos que Chart.js esté disponible (evita errores offline si no cargó)
         if (typeof Chart !== 'undefined') {
             this.renderHourlyChart(data.hourly);
             this.renderDailyChart(data.daily);
         }
 
-        // --- SOLUCIÓN AQUÍ ---
-        // Protegemos la línea de lastUpdate para que no lance error si no existe el ID
+        // --- 4. ACTUALIZACIÓN DE "ÚLTIMA HORA" ---
+        // Usamos la hora calculada del destino para el texto de "Actualizado a las..."
         const lastUpdateEl = document.getElementById('lastUpdate') || document.getElementById('update-time');
         if (lastUpdateEl) {
-            lastUpdateEl.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const now = new Date();
+            const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const targetTime = new Date(utcTime + (this.utcOffsetSeconds * 1000));
+            
+            lastUpdateEl.textContent = targetTime.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
         }
 
-
     } catch (error) {
-        console.error("Error real:", error); // Esto te dirá el error exacto en consola (F12)
+        console.error("Error real en fetchWeatherData:", error);
         this.showError('Error al obtener datos climáticos');
     } finally {
         this.hideLoading();

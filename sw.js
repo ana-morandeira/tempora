@@ -6,6 +6,7 @@ const STATIC_FILES = [
     './index.html',
     './styles/index.css',
     './services/script.js',
+    './services/chart.min.js',
     './services/manifest.json',
     './favicon_io/android-chrome-512x512.png'
 ];
