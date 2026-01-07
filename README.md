@@ -35,13 +35,14 @@ Para lograr una visualización clara de tres variables distintas (Temperatura, V
 * **Escala Secundaria (y1)**: Eje independiente ubicado a la derecha para la precipitación (mm). Esto evita que una lluvia ligera (ej. 2mm) desaparezca visualmente frente a una temperatura de 25°C, permitiendo que las barras de lluvia siempre tengan una escala representativa.
 * **Optimización de Datos (Datalabels)**: Se programó una lógica de filtrado para los iconos climáticos, asegurando que solo se rendericen en intervalos que no saturen la interfaz, manteniendo la legibilidad en pantallas móviles pequeñas.
 
-🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
+###🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
+videos backg
 La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
 
 <table> <tr> <td align="center"><b>Día Despejado</b>
 
 
-<video src="images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
+<video src="![alt text](images/backgrounds/cloudyDay.webp)" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
 
 
 <video src="images/backgrounds/cloudyDay.webp" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
