@@ -35,6 +35,51 @@ Para lograr una visualización clara de tres variables distintas (Temperatura, V
 * **Escala Secundaria (y1)**: Eje independiente ubicado a la derecha para la precipitación (mm). Esto evita que una lluvia ligera (ej. 2mm) desaparezca visualmente frente a una temperatura de 25°C, permitiendo que las barras de lluvia siempre tengan una escala representativa.
 * **Optimización de Datos (Datalabels)**: Se programó una lógica de filtrado para los iconos climáticos, asegurando que solo se rendericen en intervalos que no saturen la interfaz, manteniendo la legibilidad en pantallas móviles pequeñas.
 
+🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
+La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
+
+<table> <tr> <td align="center"><b>Día Despejado</b>
+
+
+<video src="images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
+
+
+<video src="images/backgrounds/cloudyDay.webp" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
+
+
+<video src="images/backgrounds/rainDay.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
+
+
+<video src="images/backgrounds/snowDay.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta</b>
+
+
+<video src="images/backgrounds/stormDay.webm" width="150" muted loop></video></td> </tr> <tr> <td align="center"><b>Noche Estrellada</b>
+
+
+<video src="images/backgrounds/starsNight.webm" width="150" muted loop></video></td> <td align="center"><b>Noche Nublada</b>
+
+
+<video src="images/backgrounds/cloudyNight.webm" width="150" muted loop></video></td> <td align="center"><b>Lluvia Nocturna</b>
+
+
+<video src="images/backgrounds/rainNight.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Nocturna</b>
+
+
+<video src="images/backgrounds/snowNight.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta Nocturna</b>
+
+
+<video src="images/backgrounds/stormNight.webm" width="150" muted loop></video></td> </tr> </table>
+
+📝 Último detalle para el README: La descripción de la lógica
+Para que los reclutadores o usuarios entiendan que esto no es aleatorio, añade este párrafo justo debajo de la tabla:
+
+Lógica de Renderizado Contextual: El motor visual de la App realiza una consulta binaria en cada actualización:
+
+Filtro Meteorológico: Mapea el código de la API (WMO Code) a una categoría (Despejado, Nubes, Lluvia, Nieve, Tormenta).
+
+Filtro Horario: Determina si la ubicación consultada se encuentra entre el sunrise y el sunset calculado por la API para aplicar la variante Day o Night.
+
+Esto garantiza que si buscas el tiempo en Tokio siendo de noche allí, la App te mostrará la atmósfera nocturna correspondiente aunque en tu ubicación actual sea de día.
 ## 🛠️ Tecnologías Utilizadas
 
 * **HTML5 / CSS3 / JavaScript (ES6+)**
