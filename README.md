@@ -35,7 +35,7 @@ Para lograr una visualización clara de tres variables distintas (Temperatura, V
 * **Escala Secundaria (y1)**: Eje independiente ubicado a la derecha para la precipitación (mm). Esto evita que una lluvia ligera (ej. 2mm) desaparezca visualmente frente a una temperatura de 25°C, permitiendo que las barras de lluvia siempre tengan una escala representativa.
 * **Optimización de Datos (Datalabels)**: Se programó una lógica de filtrado para los iconos climáticos, asegurando que solo se rendericen en intervalos que no saturen la interfaz, manteniendo la legibilidad en pantallas móviles pequeñas.
 
-###🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
+### 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
 videos backg
 La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
 
@@ -51,34 +51,34 @@ La interfaz de Tempora utiliza un sistema de renderizado condicional que selecci
 <table> <tr> <td align="center"><b>Día Despejado</b>
 
 
-<video src="images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
 
 
-<video src="images/backgrounds/cloudyDay.webp" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyDay.webp" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
 
 
-<video src="images/backgrounds/rainDay.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainDay.webm" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
 
 
-<video src="images/backgrounds/snowDay.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowDay.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta</b>
 
 
-<video src="images/backgrounds/stormDay.webm" width="150" muted loop></video></td> </tr> <tr> <td align="center"><b>Noche Estrellada</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> </tr> <tr> <td align="center"><b>Noche Estrellada</b>
 
 
-<video src="images/backgrounds/starsNight.webm" width="150" muted loop></video></td> <td align="center"><b>Noche Nublada</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> <td align="center"><b>Noche Nublada</b>
 
 
-<video src="images/backgrounds/cloudyNight.webm" width="150" muted loop></video></td> <td align="center"><b>Lluvia Nocturna</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyNight.webm" width="150" muted loop></video></td> <td align="center"><b>Lluvia Nocturna</b>
 
 
-<video src="images/backgrounds/rainNight.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Nocturna</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainNight.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Nocturna</b>
 
 
-<video src="images/backgrounds/snowNight.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta Nocturna</b>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowNight.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta Nocturna</b>
 
 
-<video src="images/backgrounds/stormNight.webm" width="150" muted loop></video></td> </tr> </table>
+<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/starsNight.webm" width="150" muted loop></video></td> </tr> </table>
 
 
 📝 Último detalle para el README: La descripción de la lógica
