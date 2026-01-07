@@ -9,7 +9,10 @@ const STATIC_FILES = [
     './services/chart.min.js',
     './services/datalabels.min.js',
     './services/manifest.json',
-    './favicon_io/android-chrome-512x512.png'
+    './images/favicon_io/android-chrome-192x192.png',
+    './images/favicon_io/android-chrome-512x512.png',
+    './images/favicon_io/favicon.ico',
+    './images/favicon_io/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', event => {
