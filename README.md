@@ -48,38 +48,22 @@ Aquí tienes el código de la tabla actualizado con los 10 archivos:
 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
 La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
 
-<table> <tr> <td align="center"><b>Día Despejado</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyDay.webp" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainDay.webm" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowDay.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> </tr> <tr> <td align="center"><b>Noche Estrellada</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> <td align="center"><b>Noche Nublada</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyNight.webm" width="150" muted loop></video></td> <td align="center"><b>Lluvia Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainNight.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowNight.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/starsNight.webm" width="150" muted loop></video></td> </tr> </table>
-
+<table>
+  <tr>
+    <td align="center"><b>Día Despejado</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/sunDay.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Día Nublado</b><br><img src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/cloudyDay.webp" width="150"></td>
+    <td align="center"><b>Lluvia Diurna</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/rainDay.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Nieve Diurna</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/snowDay.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Tormenta</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/stormDay.webm" width="150" muted loop autoplay></video></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Noche Estrellada</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/starsNight.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Noche Nublada</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/cloudyNight.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Lluvia Nocturna</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/rainNight.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Nieve Nocturna</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/snowNight.webm" width="150" muted loop autoplay></video></td>
+    <td align="center"><b>Tormenta Nocturna</b><br><video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/stormNight.webm" width="150" muted loop autoplay></video></td>
+  </tr>
+</table>
 
 📝 Último detalle para el README: La descripción de la lógica
 Para que los reclutadores o usuarios entiendan que esto no es aleatorio, añade este párrafo justo debajo de la tabla:
