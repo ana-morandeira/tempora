@@ -51,10 +51,10 @@ La interfaz de Tempora utiliza un sistema de renderizado condicional que selecci
 <table> <tr> <td align="center"><b>Día Despejado</b>
 
 
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
+<video src="images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
 
 
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyDay.webp" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
+<video src=![alt text](images/backgrounds/cloudyDay.webp)"" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
 
 
 <video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainDay.webm" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
