@@ -5,23 +5,20 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Permite que el contenido crezca hacia abajo */
+    align-items: flex-start;
     
-    /* Fondo base: un color suave que se ve mientras cargan los archivos */
+    /* Fondo base */
     background-color: #f0f4f8; 
     
-    /* Configuración para el .webp (clima nublado) */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
     
-    /* Importante para que el contenido flote sobre el video */
     position: relative;
     padding: 20px;
-    overflow-x: hidden; /* Evita scrolls horizontales raros en móvil */
+    overflow-x: hidden;
     
-    /* Suaviza el cambio de fondos .webp */
     transition: background-image 0.5s ease-in-out;
 }
 
@@ -29,16 +26,16 @@ body {
 .app-container {
     width: 95%;
     max-width: 500px;
-    z-index: 10; /* Asegura que la app esté por encima del video de fondo */
-    background: rgba(255, 255, 255, 0.01); /* Transparencia */
-    backdrop-filter: blur(10px); /* Difuminado del fondo */
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.05); /* Ligeramente más visible */
+    backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 15px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    box-sizing: border-box; /* VITAL: asegura que el padding no sume ancho extra */
-    overflow: hidden; /* Evita que el contenido se salga */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* ESTO ES VITAL: El video debe estar detrás de todo */
@@ -48,19 +45,20 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Envía el video al fondo total */
+    z-index: -1;
     background: transparent;
 }
 
 #bg-video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cubre toda la pantalla sin deformar */
+    object-fit: cover;
 }
 
 /* --- Títulos --- */
 h1 {
-    color: #0c3051;
+    color: #ffffff; /* Cambiado a blanco */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,45 +67,44 @@ h1 {
     margin-bottom: 20px;
 }
 
-.h1-logo { width: 45px; height: auto; }
+.h1-logo { width: 45px; height: auto; filter: drop-shadow(0px 0px 5px rgba(255,255,255,0.3)); }
+
 /* --- Buscador --- */
 .search-container {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
-    position: relative; /* Base para el alineamiento */
+    position: relative;
 }
 
-/* Nuevo Wrapper para que el input y las sugerencias se mantengan juntos */
 .search-wrapper {
     position: relative;
-    flex: 1; /* Esto hace que el input ocupe el espacio sobrante */
+    flex: 1;
 }
 
 .search-input {
-    width: 100%; /* Ocupa todo el wrapper */
+    width: 100%;
     padding: 10px 15px;
     border-radius: 12px;
-    border: 1px solid rgb(12, 48, 81);
-    background: rgba(255, 255, 255, 0.6);
-    box-sizing: border-box; /* Evita que el padding ensanche el input */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.7); /* Un poco más opaco para leer el buscador */
+    color: #333; /* Texto buscador oscuro para contraste interno */
+    box-sizing: border-box;
 }
 
-/* --- Lista de Predicciones (Añadido) --- */
 .suggestions-list {
     position: absolute;
-    top: 100%; /* Aparece justo debajo del input */
+    top: 100%;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.9); /* Un poco más opaco para leer bien las ciudades */
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 0 0 12px 12px;
-    border: 1px solid rgba(12, 48, 81, 0.2);
-    border-top: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
-    display: none; /* Se activa con JS */
+    display: none;
 }
 
 .suggestion-item {
@@ -118,9 +115,7 @@ h1 {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.suggestion-item:hover {
-    background: rgba(12, 48, 81, 0.1);
-}
+.suggestion-item:hover { background: rgba(0, 0, 0, 0.1); }
 
 /* --- Botones --- */
 .search-btn, .location-btn {
@@ -133,41 +128,40 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%; /* Para que midan lo mismo que el input */
+    height: 100%;
 }
 
-.search-btn:hover, .location-btn:hover {
-    background: #eef2f3;
-}
+.search-btn:hover, .location-btn:hover { background: #eef2f3; }
 
-/* --- Textos y Títulos --- */
+/* --- Textos de ubicación y tiempo --- */
 .date-display {
     text-align: center;
-    color: #0c3051;
+    color: #ffffff; /* Cambiado a blanco */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
     font-weight: 600;
     margin-bottom: 15px;
     text-transform: capitalize;
 }
 
 #locationName {
-    color: #ffffff; /* Cambiado a Blanco para el efecto cristal */
+    color: #ffffff;
     font-weight: 700;
     font-size: 2rem;
-    text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8);
     margin-top: 10px;
     letter-spacing: 0.5px;
+    text-align: center;
 }
 
-.location-icon {
-    color: #168097;
-    filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));
-}
 #localTime {
     font-size: 3rem;
     font-weight: bold;
-    color: white; /* Color blanco para máxima legibilidad */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra suave para fondos claros */
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    margin: 10px 0;
 }
+
 /* --- Clima Actual --- */
 .weather-main-row {
     display: flex;
@@ -176,9 +170,19 @@ h1 {
     margin: 20px 0;
 }
 
-.main-icon { font-size: 4rem; }
-#currentTemp { font-size: 3rem; font-weight: bold; color: #0c3051; display: block; }
+.main-icon { 
+    font-size: 4rem; 
+    filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.3));
+}
 
+#currentTemp { 
+    font-size: 3.5rem; 
+    font-weight: bold; 
+    color: #ffffff; /* Cambiado a blanco */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Tarjetas de Detalles --- */
 .details-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -188,14 +192,27 @@ h1 {
 }
 
 .detail-card {
-    background: rgba(255,255,255,0.1);
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.15); /* Más contraste */
+    padding: 12px;
     border-radius: 15px;
     text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.label { font-size: 0.7rem; display: block; opacity: 0.8; }
-.value { font-weight: bold; font-size: 0.9rem; color: #0c3051; }
+.label { 
+    font-size: 0.75rem; 
+    display: block; 
+    color: #ffffff; 
+    opacity: 0.9; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.value { 
+    font-weight: bold; 
+    font-size: 1rem; 
+    color: #ffffff; /* Valores en blanco */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
 
 /* --- Gráficas --- */
 .chart-wrapper {
@@ -203,28 +220,38 @@ h1 {
     margin-top: 15px;
     padding: 15px;
     border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .canvas-container {
     position: relative;
     width: 100%;
-    /* Altura dinámica: más pequeña en móviles, más grande en escritorio */
     height: 250px; 
     margin-top: 20px;
     box-sizing: border-box;
 }
 
-/* Media Query para pantallas pequeñas (Móviles) */
-@media (max-width: 480px) {
-    .canvas-container {
-        height: 200px; /* Reducimos la altura para que quepa todo el dashboard */
-        padding: 0 5px;
-    }
+.chart-title { 
+    color: #ffffff; /* Título gráfica en blanco */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    font-size: 1rem; 
+    text-align: center; 
 }
 
-
-.chart-title { color: #0c3051; font-size: 1rem; text-align: center; }
+/* Media Query para pantallas pequeñas */
+@media (max-width: 480px) {
+    .canvas-container { height: 200px; padding: 0 5px; }
+    #locationName { font-size: 1.6rem; }
+    #localTime { font-size: 2.5rem; }
+}
 
 /* --- Utilidades --- */
 .hidden { display: none !important; }
-.footer { margin-top: 20px; font-size: 0.8rem; text-align: center; opacity: 0.7; }
+.footer { 
+    margin-top: 20px; 
+    font-size: 0.8rem; 
+    text-align: center; 
+    color: white; 
+    opacity: 0.8; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
