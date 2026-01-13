@@ -13,7 +13,6 @@ const STATIC_FILES = [
     './images/favicon_io/android-chrome-512x512.png',
     './images/favicon_io/favicon.ico',
     './images/favicon_io/apple-touch-icon.png',
-    // --- Fondos dinámicos añadidos ---
     './images/backgrounds/sunDay.webm',
     './images/backgrounds/cloudyDay.webp',
     './images/backgrounds/rainDay.webm',
@@ -26,7 +25,6 @@ const STATIC_FILES = [
     './images/backgrounds/stormNight.webm'
 ];
 
-// ... (manten tus constantes STATIC_FILES arriba)
 
 self.addEventListener('install', event => {
     event.waitUntil(
