@@ -36,53 +36,13 @@ Para lograr una visualización clara de tres variables distintas (Temperatura, V
 * **Optimización de Datos (Datalabels)**: Se programó una lógica de filtrado para los iconos climáticos, asegurando que solo se rendericen en intervalos que no saturen la interfaz, manteniendo la legibilidad en pantallas móviles pequeñas.
 
 ### 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
-videos backg
+
 La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
 
-¡Excelente! Con 10 fondos el catálogo es todavía más impresionante. Para mantener el orden y la simetría en el README.md, lo mejor es pasar de una tabla de 4x2 a una de 5 columnas por 2 filas.
-
-Esto permitirá que cada estado de día tenga su pareja de noche justo debajo, lo que visualmente explica de maravilla cómo funciona tu lógica de "Estado del tiempo + Fase horaria".
-
-Aquí tienes el código de la tabla actualizado con los 10 archivos:
-
-🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
-La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
-
-<table> <tr> <td align="center"><b>Día Despejado</b>
+<
 
 
-<video src="images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
 
-
-<video src=![alt text](images/backgrounds/cloudyDay.webp)"" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainDay.webm" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowDay.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> </tr> <tr> <td align="center"><b>Noche Estrellada</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> <td align="center"><b>Noche Nublada</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyNight.webm" width="150" muted loop></video></td> <td align="center"><b>Lluvia Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainNight.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowNight.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/starsNight.webm" width="150" muted loop></video></td> </tr> </table>
-
-
-📝 Último detalle para el README: La descripción de la lógica
-Para que los reclutadores o usuarios entiendan que esto no es aleatorio, añade este párrafo justo debajo de la tabla:
 
 Lógica de Renderizado Contextual: El motor visual de la App realiza una consulta binaria en cada actualización:
 
@@ -101,22 +61,25 @@ Esto garantiza que si buscas el tiempo en Tokio siendo de noche allí, la App te
 
 ## 📦 Estructura del Proyecto
 
-```text
-/
-├── index.html          # Interfaz principal
-├── styles/
-│   └── index.css       # Estilos y diseño responsivo
+## 📂 Estructura del Proyecto
+
+
+├── images/
+│   ├── backgrounds/          # Fondos dinámicos (WebM/WebP)
+│   ├── favicon_io/           # Favicons y site.webmanifest
+│   └── logos/                # Logotipos de la PWA (192px/512px)
 ├── services/
-│   ├── script.js       # Lógica de la aplicación
-│   ├── chart.min.js    # Librería base de gráficas
-│   └── datalabels.min.js # Plugin para etiquetas de datos
-└── sw.js               # Service Worker y gestión de caché (PWA)
+│   ├── chart.min.js          # Librería Chart.js
+│   ├── datalabels.min.js     # Plugin para etiquetas de datos
+│   ├── manifest.json         # Configuración principal PWA
+│   └── script.js             # Lógica principal y APIs
+├── styles/
+│   └── index.css             # Estilos y diseño responsive
+├── index.html                # Estructura principal
+├── sw.js                     # Service Worker (Caché y Offline)
+└── README.md                 # Documentación del proyecto
 
-¡Claro que sí! Un buen README.md es la cara de tu proyecto. He preparado uno que no solo explica qué hace la App, sino que también documenta esos "dolores de cabeza" técnicos que resolvimos (como la minificación de las librerías y la gestión de la caché), lo cual es súper valioso para tu portafolio.
 
-Aquí tienes una estructura profesional lista para copiar y pegar:
-
-Markdown
 
 # 🌤️ Tempora - Weather PWA
 
@@ -159,11 +122,21 @@ Durante el desarrollo de **Tempora**, se resolvieron varios desafíos técnicos 
 * **Ciclo de Vida del Service Worker**: Se identificó que, para ver cambios de diseño o lógica reflejados en dispositivos reales (Android/iOS), es imperativo actualizar la versión de la caché (`STATIC_CACHE`) en el archivo `sw.js`. Esto fuerza al navegador a invalidar la caché antigua y descargar los recursos actualizados.
 * **Precisión del Reloj**: Para ofrecer una experiencia global, se implementó una lógica basada en `utcOffset`. Esto permite que el reloj de la App muestre la hora real de la ubicación consultada, independientemente de la zona horaria configurada en el teléfono del usuario.
 
-## 🔧 Instalación y Uso
+## 🚀 Despliegue y PWA
 
-1.  **Clonar el repositorio**: Descarga una copia local del proyecto.
-2.  **Servidor Local**: Abre el proyecto utilizando un servidor local (se recomienda **Live Server** en VS Code) para evitar problemas de CORS.
-3.  **Protocolo Seguro**: Para probar las funciones de PWA en dispositivos móviles, asegúrate de servir la aplicación bajo el protocolo **HTTPS**.
+La aplicación está totalmente optimizada como **Progressive Web App (PWA)** y puede utilizarse en cualquier dispositivo móvil:
 
+* **Versión en vivo:** [https://ana-morandeira.github.io/tempora/](https://ana-morandeira.github.io/tempora/)
+* **Instalación:** * En **Android**, pulsa en el banner de instalación o en "Instalar aplicación" desde el menú de Chrome.
+    * En **iOS (Safari)**, pulsa el botón **Compartir** y selecciona **"Añadir a la pantalla de inicio"**.
+* **Modo Offline:** Gracias a la implementación del Service Worker v10, la aplicación permite la consulta de datos previamente cargados y mantiene la experiencia visual sin conexión a internet.
+
+## 🔧 Instalación y Uso Local
+
+Para ejecutar el proyecto en un entorno de desarrollo:
+
+1.  **Clonar el repositorio:** Descarga una copia local mediante `git clone`.
+2.  **Servidor Local:** Es imprescindible abrir el proyecto con un servidor (como **Live Server** en VS Code). Esto garantiza el correcto funcionamiento del Service Worker y evita bloqueos de políticas de seguridad (CORS).
+3.  **Depuración de PWA:** Para testear las funciones de instalación y caché en local, se recomienda usar el protocolo **HTTPS** (proporcionado automáticamente al desplegar en GitHub Pages) o configurar un túnel seguro.
 ---
 *Desarrollado con ❤️ para amantes de la meteorología.*
