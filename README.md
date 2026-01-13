@@ -36,62 +36,9 @@ Para lograr una visualización clara de tres variables distintas (Temperatura, V
 * **Optimización de Datos (Datalabels)**: Se programó una lógica de filtrado para los iconos climáticos, asegurando que solo se rendericen en intervalos que no saturen la interfaz, manteniendo la legibilidad en pantallas móviles pequeñas.
 
 ### 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
-videos backg
+
 La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
 
-¡Excelente! Con 10 fondos el catálogo es todavía más impresionante. Para mantener el orden y la simetría en el README.md, lo mejor es pasar de una tabla de 4x2 a una de 5 columnas por 2 filas.
-
-Esto permitirá que cada estado de día tenga su pareja de noche justo debajo, lo que visualmente explica de maravilla cómo funciona tu lógica de "Estado del tiempo + Fase horaria".
-
-Aquí tienes el código de la tabla actualizado con los 10 archivos:
-
-🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
-La interfaz de Tempora utiliza un sistema de renderizado condicional que selecciona entre 10 atmósferas únicas basándose en la combinación de weather_code y la hora local.
-
-<table> <tr> <td align="center"><b>Día Despejado</b>
-
-
-<video src="images/backgrounds/sunDay.webm" width="150" muted loop></video></td> <td align="center"><b>Día Nublado</b>
-
-
-<video src=![alt text](images/backgrounds/cloudyDay.webp)"" width="150" muted loop></video></td> <td align="center"><b>Lluvia Diurna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainDay.webm" muted loop></video></td> <td align="center"><b>Nieve Diurna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowDay.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> </tr> <tr> <td align="center"><b>Noche Estrellada</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/stormDay.webm" width="150" muted loop></video></td> <td align="center"><b>Noche Nublada</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/cloudyNight.webm" width="150" muted loop></video></td> <td align="center"><b>Lluvia Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/rainNight.webm" width="150" muted loop></video></td> <td align="center"><b>Nieve Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/snowNight.webm" width="150" muted loop></video></td> <td align="center"><b>Tormenta Nocturna</b>
-
-
-<video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/starsNight.webm" width="150" muted loop></video></td> </tr> </table>
-
-
-📝 Último detalle para el README: La descripción de la lógica
-Para que los reclutadores o usuarios entiendan que esto no es aleatorio, añade este párrafo justo debajo de la tabla:
-
-Lógica de Renderizado Contextual: El motor visual de la App realiza una consulta binaria en cada actualización:
-
-Filtro Meteorológico: Mapea el código de la API (WMO Code) a una categoría (Despejado, Nubes, Lluvia, Nieve, Tormenta).
-
-Filtro Horario: Determina si la ubicación consultada se encuentra entre el sunrise y el sunset calculado por la API para aplicar la variante Day o Night.
-
-Esto garantiza que si buscas el tiempo en Tokio siendo de noche allí, la App te mostrará la atmósfera nocturna correspondiente aunque en tu ubicación actual sea de día.
-## 🛠️ Tecnologías Utilizadas
 
 * **HTML5 / CSS3 / JavaScript (ES6+)**
 * **Chart.js v4**: Para la visualización de datos climáticos.
