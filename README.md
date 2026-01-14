@@ -43,6 +43,11 @@ La interfaz utiliza un sistema de renderizado condicional que selecciona entre 1
   <p><i>Visualización de las atmósferas dinámicas y flujo de la aplicación.</i></p>
 </div>
 
+<p align="center">
+  <video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/backgroundsReadme.mp4" width="100%" autoplay loop muted playsinline>
+    Tu navegador no admite el elemento de video.
+  </video>
+</p>
 
 **Lógica de Renderizado Contextual:**
 1. **Filtro Meteorológico**: Mapea el código de la API (WMO Code) a una categoría (Despejado, Nubes, Lluvia, Nieve, Tormenta).
@@ -76,12 +81,14 @@ Esto garantiza que si buscas el tiempo en Tokio siendo de noche allí, la App mo
 ├── sw.js                     # Service Worker (Caché y Offline)
 └── README.md                 # Documentación
 
+
 ⚠️ Notas de Desarrollo (Lecciones Aprendidas)
 Gestión de Librerías Locales: Para asegurar la disponibilidad offline, se optó por servir las librerías de forma local, asegurando el registro global del plugin antes de la inicialización.
 
 Ciclo de Vida del Service Worker: Se identificó que para refrescar cambios en dispositivos reales es imperativo actualizar la versión de la caché (STATIC_CACHE) en sw.js.
 
 Precisión del Reloj: Implementación basada en utcOffset para mostrar la hora real de la ciudad consultada, independientemente de la zona horaria del dispositivo del usuario.
+
 
 🚀 Despliegue y PWA
 Versión en vivo: https://ana-morandeira.github.io/tempora/
