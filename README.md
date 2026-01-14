@@ -44,15 +44,7 @@ La interfaz utiliza un sistema de renderizado condicional que selecciona entre 1
 
 La interfaz utiliza un sistema de renderizado condicional que selecciona entre 10 escenarios basándose en la combinación de `weather_code` y la hora local.
 
-| Estado | Día | Noche |
-| :--- | :---: | :---: |
-| **Despejado** | <img src="images/backgrounds/sunDay.webp" width="200"> | <img src="images/backgrounds/starsNight.webp" width="200"> |
-| **Nubes** | <img src="images/backgrounds/cloudyDay.webp" width="200"> | <img src="images/backgrounds/cloudyNight.webp" width="200"> |
-| **Lluvia** | <img src="images/backgrounds/rainDay.webp" width="200"> | <img src="images/backgrounds/rainNight.webp" width="200"> |
-| **Tormenta** | <img src="images/backgrounds/stormDay.webp" width="200"> | <img src="images/backgrounds/stormNight.webp" width="200"> |
-| **Nieve** | <img src="images/backgrounds/snowDay.webp" width="200"> | <img src="images/backgrounds/snowNight.webp" width="200"> |
 
-*Nota: Se muestran capturas de las atmósferas dinámicas integradas en la aplicación.*
 **Lógica de Renderizado Contextual:**
 1. **Filtro Meteorológico**: Mapea el código de la API (WMO Code) a una categoría (Despejado, Nubes, Lluvia, Nieve, Tormenta).
 2. **Filtro Horario**: Determina si la ubicación se encuentra entre el *sunrise* y el *sunset* calculado por la API para aplicar la variante Day o Night.
