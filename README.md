@@ -37,17 +37,19 @@ Para lograr una visualización clara de tres variables distintas en un mismo lie
 
 La interfaz utiliza un sistema de renderizado condicional que selecciona entre 10 escenarios basándose en la combinación de `weather_code` y la hora local.
 
+## 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
 
-<div align="center">
-  <video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/backgroundsReadme.mp4" width="100%" autoplay loop muted playsinline></video>
-  <p><i>Visualización de las atmósferas dinámicas y flujo de la aplicación.</i></p>
-</div>
+La interfaz utiliza un sistema de renderizado condicional que selecciona entre 10 escenarios basándose en la combinación de `weather_code` y la hora local.
 
-<p align="center">
-  <video src="https://raw.githubusercontent.com/ana-morandeira/tempora/main/images/backgrounds/backgroundsReadme.mp4" width="100%" autoplay loop muted playsinline>
-    Tu navegador no admite el elemento de video.
-  </video>
-</p>
+| Estado | Día | Noche |
+| :--- | :---: | :---: |
+| **Despejado** | <video src="images/backgrounds/sunDay.webm" width="200" autoplay loop muted></video> | <video src="images/backgrounds/starsNight.webm" width="200" autoplay loop muted></video> |
+| **Nubes** | <img src="images/backgrounds/cloudyDay.webp" width="200"> | <video src="images/backgrounds/cloudyNight.webm" width="200" autoplay loop muted></video> |
+| **Lluvia** | <video src="images/backgrounds/rainDay.webm" width="200" autoplay loop muted></video> | <video src="images/backgrounds/rainNight.webm" width="200" autoplay loop muted></video> |
+| **Tormenta** | <video src="images/backgrounds/stormDay.webm" width="200" autoplay loop muted></video> | <video src="images/backgrounds/stormNight.webm" width="200" autoplay loop muted></video> |
+| **Nieve** | <video src="images/backgrounds/snowDay.webm" width="200" autoplay loop muted></video> | <video src="images/backgrounds/snowNight.webm" width="200" autoplay loop muted></video> |
+
+*Nota: La visualización combina archivos dinámicos WebM y estáticos WebP para optimizar la carga.*
 
 **Lógica de Renderizado Contextual:**
 1. **Filtro Meteorológico**: Mapea el código de la API (WMO Code) a una categoría (Despejado, Nubes, Lluvia, Nieve, Tormenta).
