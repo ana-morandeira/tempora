@@ -23,10 +23,14 @@ Este gráfico combina diferentes tipos de visualización para ofrecer una perspe
 * **Línea de Viento**: Una línea discontinua (dash) que permite diferenciar la velocidad del viento sin saturar visualmente el gráfico.
 * **Interactividad**: Tooltips personalizados que muestran la unidad exacta (ºC, km/h, mm).
 
+<video controls src="grafica24Horas.mp4" title="Title"></video>
+
 ### 2. Panel Diario (Previsión Semanal)
 Enfocado en la planificación a medio plazo:
 * **Comparativa Máx/Mín**: Barras verticales que muestran el rango de temperatura de cada día.
 * **Etiquetado Dinámico**: Uso del plugin `datalabels` para proyectar el icono del tiempo predominante directamente sobre la barra de temperatura máxima.
+
+<video controls src="grafica15Dias.mp4" title=""></video>
 
 ### 🛠️ Configuración Técnica de las Gráficas
 Para lograr una visualización clara de tres variables distintas en un mismo lienzo, se implementó una configuración de **Ejes Y Duales**:
