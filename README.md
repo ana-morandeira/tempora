@@ -39,7 +39,7 @@ La interfaz utiliza un sistema de renderizado condicional que selecciona entre 1
 
 
 <div align="center">
-  <video src="images/backgrounds/backgroundsReadme.mp4" width="100%" autoplay loop muted playsinline></video>
+  <video src="https://github.com/ana-morandeira/tempora/blob/main/images/backgrounds/backgroundsReadme.mp4" width="100%" autoplay loop muted playsinline></video>
   <p><i>Visualización de las atmósferas dinámicas y flujo de la aplicación.</i></p>
 </div>
 
