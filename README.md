@@ -37,12 +37,7 @@ Para lograr una visualización clara de tres variables distintas en un mismo lie
 
 La interfaz utiliza un sistema de renderizado condicional que selecciona entre 10 escenarios basándose en la combinación de `weather_code` y la hora local.
 
-## 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
-
-La interfaz utiliza un sistema de renderizado condicional que selecciona entre 10 escenarios basándose en la combinación de `weather_code` y la hora local.
-## 🎭 Galería de Atmósferas Dinámicas (10 Escenarios)
-
-La interfaz utiliza un sistema de renderizado condicional que selecciona entre 10 escenarios basándose en la combinación de `weather_code` y la hora local.
+![Texto alternativo](URL_DEL_GIF)
 
 
 **Lógica de Renderizado Contextual:**
