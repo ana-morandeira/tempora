@@ -2,9 +2,6 @@
 
 **Tempora App** es una Aplicación Web Progresiva (PWA) de clima diseñada para ofrecer una experiencia visual, rápida y funcional tanto en escritorio como en dispositivos móviles. Proporciona datos meteorológicos en tiempo real utilizando la API de Open-Meteo.
 <img width="512" height="512" alt="temporaLogo512" src="https://github.com/user-attachments/assets/d88ac1cd-8596-41a6-960a-9963e0db99bd" />
-<img width="70" height="119" alt="movilInterface" src="https://github.com/user-attachments/assets/c25f28c9-88eb-4317-b693-13c398c03269" />
-
-
 
 ---
 
@@ -81,8 +78,10 @@ Esto garantiza que si buscas el tiempo en Tokio siendo de noche allí, la App mo
 ├── sw.js                     # Service Worker (Caché y Offline)
 └── README.md                 # Documentación
 
+```
 
-⚠️ Notas de Desarrollo (Lecciones Aprendidas)
+
+## ⚠️ Notas de Desarrollo (Lecciones Aprendidas)
 Gestión de Librerías Locales: Para asegurar la disponibilidad offline, se optó por servir las librerías de forma local, asegurando el registro global del plugin antes de la inicialización.
 
 Ciclo de Vida del Service Worker: Se identificó que para refrescar cambios en dispositivos reales es imperativo actualizar la versión de la caché (STATIC_CACHE) en sw.js.
@@ -90,7 +89,7 @@ Ciclo de Vida del Service Worker: Se identificó que para refrescar cambios en d
 Precisión del Reloj: Implementación basada en utcOffset para mostrar la hora real de la ciudad consultada, independientemente de la zona horaria del dispositivo del usuario.
 
 
-🚀 Despliegue y PWA
+## 🚀 Despliegue y PWA
 Versión en vivo: https://ana-morandeira.github.io/tempora/
 
 Instalación: * Android: Banner de instalación desde Chrome.
