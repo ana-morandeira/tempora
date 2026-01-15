@@ -1,6 +1,10 @@
 # 🌤️ Tempora App - Weather PWA
 
 **Tempora App** es una Aplicación Web Progresiva (PWA) de clima diseñada para ofrecer una experiencia visual, rápida y funcional tanto en escritorio como en dispositivos móviles. Proporciona datos meteorológicos en tiempo real utilizando la API de Open-Meteo.
+<img width="512" height="512" alt="temporaLogo512" src="https://github.com/user-attachments/assets/d88ac1cd-8596-41a6-960a-9963e0db99bd" />
+<img width="70" height="119" alt="movilInterface" src="https://github.com/user-attachments/assets/c25f28c9-88eb-4317-b693-13c398c03269" />
+
+
 
 ---
 
