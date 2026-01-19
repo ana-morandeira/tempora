@@ -1,6 +1,7 @@
 # 🌤️ Tempora App - Weather PWA
 
 **Tempora App** es una Aplicación Web Progresiva (PWA) de clima diseñada para ofrecer una experiencia visual, rápida y funcional tanto en escritorio como en dispositivos móviles. Proporciona datos meteorológicos en tiempo real utilizando la API de Open-Meteo.
+<img width="512" height="512" alt="temporaLogo512" src="https://github.com/user-attachments/assets/d88ac1cd-8596-41a6-960a-9963e0db99bd" />
 
 ---
 
@@ -23,14 +24,15 @@ Este gráfico combina diferentes tipos de visualización para ofrecer una perspe
 * **Línea de Viento**: Una línea discontinua (dash) que permite diferenciar la velocidad del viento sin saturar visualmente el gráfico.
 * **Interactividad**: Tooltips personalizados que muestran la unidad exacta (ºC, km/h, mm).
 
-<video controls src="grafica24Horas.mp4" title="Title"></video>
+<img width="257" height="187" alt="graphic24hours" src="https://github.com/user-attachments/assets/b7f9be44-e277-4e7e-bbaa-6e756164a672" />
 
 ### 2. Panel Diario (Previsión Semanal)
 Enfocado en la planificación a medio plazo:
 * **Comparativa Máx/Mín**: Barras verticales que muestran el rango de temperatura de cada día.
 * **Etiquetado Dinámico**: Uso del plugin `datalabels` para proyectar el icono del tiempo predominante directamente sobre la barra de temperatura máxima.
 
-<video controls src="grafica15Dias.mp4" title=""></video>
+<img width="264" height="186" alt="graphic15Days" src="https://github.com/user-attachments/assets/e746001d-bc32-4fd5-ba11-b270e6b3d1ca" />
+
 
 ### 🛠️ Configuración Técnica de las Gráficas
 Para lograr una visualización clara de tres variables distintas en un mismo lienzo, se implementó una configuración de **Ejes Y Duales**:
@@ -76,8 +78,10 @@ Esto garantiza que si buscas el tiempo en Tokio siendo de noche allí, la App mo
 ├── sw.js                     # Service Worker (Caché y Offline)
 └── README.md                 # Documentación
 
+```
 
-⚠️ Notas de Desarrollo (Lecciones Aprendidas)
+
+## ⚠️ Notas de Desarrollo (Lecciones Aprendidas)
 Gestión de Librerías Locales: Para asegurar la disponibilidad offline, se optó por servir las librerías de forma local, asegurando el registro global del plugin antes de la inicialización.
 
 Ciclo de Vida del Service Worker: Se identificó que para refrescar cambios en dispositivos reales es imperativo actualizar la versión de la caché (STATIC_CACHE) en sw.js.
@@ -85,7 +89,7 @@ Ciclo de Vida del Service Worker: Se identificó que para refrescar cambios en d
 Precisión del Reloj: Implementación basada en utcOffset para mostrar la hora real de la ciudad consultada, independientemente de la zona horaria del dispositivo del usuario.
 
 
-🚀 Despliegue y PWA
+## 🚀 Despliegue y PWA
 Versión en vivo: https://ana-morandeira.github.io/tempora/
 
 Instalación: * Android: Banner de instalación desde Chrome.
