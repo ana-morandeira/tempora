@@ -22,14 +22,12 @@ class WeatherApp {
         const cityInput = document.getElementById('cityInput');
         const suggestions = document.getElementById('suggestions');
 
-        // Evento para el botón de buscar
         document.getElementById('searchBtn').addEventListener('click', () => {
             const city = cityInput.value.trim();
             if (city) this.searchByCity(city);
             suggestions.style.display = 'none';
         });
 
-        // Evento para la tecla Enter
         cityInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const city = e.target.value.trim();
@@ -37,8 +35,6 @@ class WeatherApp {
                 suggestions.style.display = 'none';
             }
         });
-
-        // --- LÓGICA DEL PREDICTOR ---
         cityInput.addEventListener('input', async () => {
             const query = cityInput.value.trim();
             if (query.length < 3) {
@@ -60,7 +56,6 @@ class WeatherApp {
             }
         });
 
-        // Cerrar sugerencias al hacer clic fuera
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-wrapper')) {
                 suggestions.style.display = 'none';
@@ -72,7 +67,6 @@ class WeatherApp {
         });
     }
 
-    // Método para dibujar las sugerencias
     renderSuggestions(cities) {
         const suggestions = document.getElementById('suggestions');
         const cityInput = document.getElementById('cityInput');
@@ -88,7 +82,7 @@ class WeatherApp {
             div.addEventListener('click', () => {
                 cityInput.value = city.name;
                 suggestions.style.display = 'none';
-                // Usamos directamente las coordenadas para ser más rápidos
+            
                 this.fetchWeatherData(city.latitude, city.longitude);
                 document.getElementById('locationName').textContent = `${name}`;
             });
@@ -179,7 +173,6 @@ async fetchWeatherData(lat, lon) {
     try {
         this.showLoading();
         
-        // Añadimos &timezone=auto para que la API nos devuelva el offset exacto del lugar
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,is_day,weather_code,surface_pressure,wind_speed_10m,visibility&hourly=temperature_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=15&timezone=auto`;
 
         const res = await fetch(url);
@@ -187,31 +180,22 @@ async fetchWeatherData(lat, lon) {
         
         const data = await res.json();
 
-        // --- 1. GUARDAR DATOS DE ZONA HORARIA ---
-        // Guardamos el desplazamiento en segundos para el reloj internacional
         this.utcOffsetSeconds = data.utc_offset_seconds; 
         
-        // --- 2. GESTIÓN DE LA INTERFAZ ---
         const weatherCont = document.getElementById('currentWeather');
         const chartsCont = document.getElementById('charts');
         
-        // Quitamos el 'hidden' solo si los elementos existen
         if (weatherCont) weatherCont.classList.remove('hidden');
         if (chartsCont) chartsCont.classList.remove('hidden');
 
-        // Pintamos los datos actuales e imagen de fondo
         this.displayCurrentWeather(data.current);
         this.updateBackgroundImage(data.current.weather_code, data.current.is_day);
 
-        // --- 3. RENDERIZADO DE GRÁFICOS ---
-        // Verificamos que Chart.js esté disponible (evita errores offline si no cargó)
         if (typeof Chart !== 'undefined') {
             this.renderHourlyChart(data.hourly);
             this.renderDailyChart(data.daily);
         }
 
-        // --- 4. ACTUALIZACIÓN DE "ÚLTIMA HORA" ---
-        // Usamos la hora calculada del destino para el texto de "Actualizado a las..."
         const lastUpdateEl = document.getElementById('lastUpdate') || document.getElementById('update-time');
         if (lastUpdateEl) {
             const now = new Date();
@@ -250,7 +234,7 @@ displayCurrentWeather(c) {
     }
 
     renderHourlyChart(hourly) {
-        if (typeof Chart === 'undefined') return; // Seguridad: si no hay librería, no rompas la app
+        if (typeof Chart === 'undefined') return; 
         
         const weatherIconsMap = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 51: '🌧️', 61: '🌧️', 71: '❄️', 95: '⛈️' };
         const labels = hourly.time.slice(0, 24).map(t => `${new Date(t).getHours()}h`);
@@ -345,7 +329,7 @@ displayCurrentWeather(c) {
     }
 
     renderDailyChart(daily) {
-        if (typeof Chart === 'undefined') return; // Seguridad
+        if (typeof Chart === 'undefined') return; 
         
         const labels = daily.time.map(d => new Date(d).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }));
         const ctx = document.getElementById('dailyChart');
@@ -433,13 +417,10 @@ displayCurrentWeather(c) {
 
             const now = new Date();
             
-            // Si tenemos el offset de la ciudad buscada, lo usamos. 
-            // Si no (al arrancar la app), usamos el offset local del móvil.
             const offset = (this.utcOffsetSeconds !== undefined) 
                 ? this.utcOffsetSeconds 
                 : (now.getTimezoneOffset() * -60);
 
-            // Calculamos la hora real del destino
             const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
             const targetTime = new Date(utcTime + (offset * 1000));
 
@@ -450,27 +431,22 @@ displayCurrentWeather(c) {
         };
 
         updateTime();
-        // Lo actualizamos cada segundo (1000ms) para que el cambio sea instantáneo al buscar
         setInterval(updateTime, 1000); 
     }
 
 
 }
 
-// Creamos la instancia y la hacemos global para poder usarla desde la consola
 const miApp = new WeatherApp();
 window.miApp = miApp;
 
-// (Opcional) Si quieres mantener el listener de carga por seguridad:
 document.addEventListener('DOMContentLoaded', () => {
-    // La app ya se inició arriba, pero aquí nos aseguramos de que el DOM esté listo
     console.log("Tempora App lista y conectada a window.miApp");
 });
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
-            // Caso 1: Detecta actualizaciones mientras la App está abierta
             reg.onupdatefound = () => {
                 const installingWorker = reg.installing;
                 installingWorker.onstatechange = () => {
@@ -483,8 +459,6 @@ if ('serviceWorker' in navigator) {
         });
     });
 
-    // Caso 2: El "Seguro de Vida". Si el Service Worker se activa, 
-    // obliga a la página a refrescarse para usar el código nuevo.
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (!refreshing) {

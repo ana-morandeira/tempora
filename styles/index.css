@@ -1,4 +1,4 @@
-/* --- Estilos Globales --- */
+
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -7,7 +7,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     
-    /* Fondo base */
+    
     background-color: #f0f4f8; 
     
     background-size: cover;
@@ -22,12 +22,11 @@ body {
     transition: background-image 0.5s ease-in-out;
 }
 
-/* Ajuste para el contenedor de la App (Efecto Cristal) */
 .app-container {
     width: 95%;
     max-width: 500px;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.05); /* Ligeramente más visible */
+    background: rgba(255, 255, 255, 0.05); 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -38,7 +37,6 @@ body {
     overflow: hidden;
 }
 
-/* ESTO ES VITAL: El video debe estar detrás de todo */
 #video-bg-container {
     position: fixed;
     top: 0;
@@ -55,9 +53,8 @@ body {
     object-fit: cover;
 }
 
-/* --- Títulos --- */
 h1 {
-    color: #ffffff; /* Cambiado a blanco */
+    color: #ffffff; 
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
@@ -69,7 +66,6 @@ h1 {
 
 .h1-logo { width: 45px; height: auto; filter: drop-shadow(0px 0px 5px rgba(255,255,255,0.3)); }
 
-/* --- Buscador --- */
 .search-container {
     display: flex;
     gap: 8px;
@@ -87,8 +83,8 @@ h1 {
     padding: 10px 15px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.7); /* Un poco más opaco para leer el buscador */
-    color: #333; /* Texto buscador oscuro para contraste interno */
+    background: rgba(255, 255, 255, 0.7); 
+    color: #333; 
     box-sizing: border-box;
 }
 
@@ -117,7 +113,6 @@ h1 {
 
 .suggestion-item:hover { background: rgba(0, 0, 0, 0.1); }
 
-/* --- Botones --- */
 .search-btn, .location-btn {
     background: white;
     border: none;
@@ -133,10 +128,9 @@ h1 {
 
 .search-btn:hover, .location-btn:hover { background: #eef2f3; }
 
-/* --- Textos de ubicación y tiempo --- */
 .date-display {
     text-align: center;
-    color: #ffffff; /* Cambiado a blanco */
+    color: #ffffff; 
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
     font-weight: 600;
     margin-bottom: 15px;
@@ -162,7 +156,6 @@ h1 {
     margin: 10px 0;
 }
 
-/* --- Clima Actual --- */
 .weather-main-row {
     display: flex;
     align-items: center;
@@ -178,11 +171,10 @@ h1 {
 #currentTemp { 
     font-size: 3.5rem; 
     font-weight: bold; 
-    color: #ffffff; /* Cambiado a blanco */
+    color: #ffffff; 
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
-/* --- Tarjetas de Detalles --- */
 .details-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -192,7 +184,7 @@ h1 {
 }
 
 .detail-card {
-    background: rgba(255, 255, 255, 0.15); /* Más contraste */
+    background: rgba(255, 255, 255, 0.15); 
     padding: 12px;
     border-radius: 15px;
     text-align: center;
@@ -210,11 +202,10 @@ h1 {
 .value { 
     font-weight: bold; 
     font-size: 1rem; 
-    color: #ffffff; /* Valores en blanco */
+    color: #ffffff; 
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
 }
 
-/* --- Gráficas --- */
 .chart-wrapper {
     background: rgba(255, 255, 255, 0.1);
     margin-top: 15px;
@@ -232,20 +223,18 @@ h1 {
 }
 
 .chart-title { 
-    color: #ffffff; /* Título gráfica en blanco */
+    color: #ffffff; 
     text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
     font-size: 1rem; 
     text-align: center; 
 }
 
-/* Media Query para pantallas pequeñas */
 @media (max-width: 480px) {
     .canvas-container { height: 200px; padding: 0 5px; }
     #locationName { font-size: 1.6rem; }
     #localTime { font-size: 2.5rem; }
 }
 
-/* --- Utilidades --- */
 .hidden { display: none !important; }
 .footer { 
     margin-top: 20px; 
